@@ -1,0 +1,10 @@
+{
+  "name": "cotask",
+  "description": "multiplayer collaboration todolist",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm"
+  },
+  "keywords": ["todolist", "react", "vite", "nestjs"],
+  "author": "gamejoye",
+  "license": "MIT"
+}

@@ -1,0 +1,12 @@
+{
+  "version": "independent",
+  "npmClient": "pnpm",
+  "command": {
+    "publish": {
+      "message": "chore(version): publish %s"
+    },
+    "version": {
+      "allowBranch": "main"
+    }
+  }
+}

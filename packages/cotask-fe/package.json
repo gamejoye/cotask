@@ -1,0 +1,28 @@
+{
+  "name": "cotask-fe",
+  "version": "0.0.0",
+  "description": "cotask frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "todolist",
+    "react",
+    "vite"
+  ],
+  "author": "gamejoye",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.6"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
