@@ -1,24 +1,34 @@
-import { List, Space, Typography, Dropdown } from 'antd';
+import { List, Typography, Button, Flex } from 'antd';
 import { useMemo, useState } from 'react';
-import type { MenuProps } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import TodoItem from './TodoItem';
 export type Todo = {
   id: number;
   title: string;
   completed: boolean;
 }
 
+export type Group = {
+  id: number;
+  name: string;
+}
+
 export type Props = {
-  todos: Todo[]
+  todos: Todo[],
+  group: Group,
   onDelete: (todo: Todo) => void,
-  onComplete: (todo: Todo) => void
+  onComplete: (todo: Todo) => void,
   onEdit: (todo: Todo) => void,
   loadMore: () => void,
   hasMore: boolean,
-  showCompleted?: boolean
+  showCompleted?: boolean,
 }
+
+type DataSource = ({ type: 'edit' | 'show', todo: Todo })[];
 
 export default function TodoList({
   todos,
+  group,
   onDelete,
   onComplete,
   onEdit,
@@ -26,9 +36,42 @@ export default function TodoList({
   hasMore,
   showCompleted = false,
 }: Props) {
+  const [creating, setCreating] = useState(false);
+  const [editing, setEditing] = useState<Todo | null>(null);
   const dataSource = useMemo(() => {
-    return showCompleted ? todos : todos.filter((todo) => !todo.completed);
-  }, [todos, showCompleted]);
+    const dataSource: DataSource = [];
+    if (creating) {
+      dataSource.push({
+        type: 'edit',
+        todo: { id: 0, title: '', completed: false },
+      });
+    }
+    dataSource.push(
+      ...(showCompleted ? todos : todos.filter((todo) => !todo.completed)).map<DataSource[number]>((todo) => ({
+        type: editing?.id === todo.id ? 'edit' : 'show',
+        todo,
+      }))
+    )
+    return dataSource;
+  }, [todos, showCompleted, creating, editing]);
+
+  const handleNewTodo = () => {
+    if (creating) return;
+    if (editing) return;
+    setCreating(true);
+  }
+
+  const handleDoubleClick = (todo: Todo) => {
+    if (creating) return;
+    if (editing) return;
+    setEditing(todo);
+  }
+
+  const wrapperOnEdit: typeof onEdit = (...args) => {
+    onEdit(...args);
+    setEditing(null);
+    setCreating(false);
+  }
   return (
     <List
       dataSource={dataSource}
@@ -36,103 +79,36 @@ export default function TodoList({
       locale={{
         emptyText: '已完成所有待办事项',
       }}
-      renderItem={(todo) => (
-        <TodoItemRightClickMenu
-          onComplete={() => onComplete(todo)}
-          onDelete={() => onDelete(todo)}
-          onEdit={() => onEdit(todo)}
-        >
-          <Space style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
-            <div
-              onClick={() => onComplete(todo)}
-              style={{
-                width: '20px',
-                height: '20px',
-                borderRadius: '50%',
-                border: '2px solid #1890ff',
-                backgroundColor: todo.completed ? '#1890ff' : undefined,
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: '16px',
-              }}
-            />
-            <div style={{ flex: 1 }}>
-              <Typography.Text delete={todo.completed}>{todo.title}</Typography.Text>
-              <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {'2024/12/17'}</div>
-            </div>
-          </Space>
-        </TodoItemRightClickMenu>
+      header={
+        <Flex justify='space-between'>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            {group.name}
+          </Typography.Title>
+          <Button
+            type='dashed'
+            icon={<PlusOutlined />}
+            onClick={handleNewTodo}
+            size="middle"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          />
+        </Flex>
+      }
+      renderItem={({ type, todo }) => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          initialIsEdting={type === 'edit'}
+          onComplete={onComplete}
+          onDelete={onDelete}
+          onEdit={wrapperOnEdit}
+          onCancel={creating ? () => { setCreating(false) } : editing ? () => { setEditing(null) } : undefined}
+          onDoubleClick={() => handleDoubleClick(todo)}
+        />
       )}
     />
   );
 }
-
-type RightClickMenuProps = {
-  children: React.ReactNode,
-  onDelete: () => void,
-  onComplete: () => void,
-  onEdit: () => void,
-}
-
-function TodoItemRightClickMenu({ children, onDelete, onComplete, onEdit }: RightClickMenuProps) {
-  const items: MenuProps['items'] = [
-    {
-      label: '标记为完成',
-      key: '1',
-    },
-    {
-      label: '优先级',
-      key: '2',
-      children: [
-        {
-          label: '低',
-          key: '2/1',
-        },
-        {
-          label: '中',
-          key: '2/2',
-        },
-        {
-          label: '高',
-          key: '2/3',
-        }
-      ]
-    },
-    {
-      label: '删除',
-      key: '3',
-    },
-  ];
-
-  const [isOpen, setIsOpen] = useState(false);
-  const onClick: MenuProps['onClick'] = ({ key }) => {
-    if (key === '1') {
-      onComplete();
-    } else if (key === '2') {
-
-    } else if (key === '3') {
-      onDelete();
-    }
-  };
-
-  return (
-    <Dropdown
-      menu={{ items, onClick }}
-      trigger={['contextMenu']} onOpenChange={(isOpen) => {
-        setIsOpen(isOpen);
-      }}
-    >
-      <List.Item style={{
-        border: isOpen ? '1px solid #1890ff' : '1px solid #d9d9d9',
-        borderRadius: '4px',
-        padding: '12px 16px',
-        transition: 'border 0.2s ease-in-out',
-        boxShadow: isOpen ? '0 0 8px rgba(24, 144, 255, 0.5)' : 'none',
-      }}>
-        {children}
-      </List.Item>
-    </Dropdown>
-  );
-};

@@ -41,6 +41,10 @@ export const Default = Template.bind({});
       completed: true,
     },
   ],
+  group: {
+    id: 1,
+    name: '今天',
+  },
   onDelete: fn(),
   onComplete: fn(),
   onEdit: fn(),
