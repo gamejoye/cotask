@@ -2,9 +2,5 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "baseUrl": ".",
-    "paths": {
-      "@cotask/*": ["src/*"],
-    }
   }
 }
