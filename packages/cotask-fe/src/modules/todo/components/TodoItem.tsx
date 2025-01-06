@@ -1,9 +1,10 @@
-import { Button, Dropdown, Input, InputRef, Space, Tooltip, Typography } from "antd";
+import { Button, Dropdown, Input, InputRef, Modal, Popconfirm, Space, Tooltip, Typography } from "antd";
 import { Todo } from "./TodoList";
 import { MenuProps } from "antd/lib";
 import { useEffect, useRef, useState } from "react";
 import useToken from "antd/es/theme/useToken";
-import { CheckOutlined, CloseOutlined, MenuOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, InfoCircleFilled, InfoCircleTwoTone, MenuOutlined } from "@ant-design/icons";
+import TodoForm from "./TodoForm";
 
 export type Props = {
   todo: Todo,
@@ -28,6 +29,16 @@ export default function TodoItem({
   const editRef = useRef<InputRef>(null);
   const { colorTextLightSolid } = useToken()[1];
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     if (editRef.current) editRef.current.focus();
   }, [editRef.current]);
@@ -43,26 +54,6 @@ export default function TodoItem({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [newTodo]);
-  const items: MenuProps['items'] = [
-    {
-      label: '优先级',
-      key: '1',
-      children: [
-        {
-          label: '低',
-          key: '1/1',
-        },
-        {
-          label: '中',
-          key: '1/2',
-        },
-        {
-          label: '高',
-          key: '1/3',
-        }
-      ]
-    },
-  ];
 
   const onClick = () => {
 
@@ -82,57 +73,64 @@ export default function TodoItem({
   // 编辑态
   if (initialIsEdting) {
     return (
-      <div style={{
-        border: '1px solid #d9d9d9',
-        borderRadius: '4px',
-        padding: '12px 16px',
-        transition: 'border 0.2s ease-in-out',
-        minWidth: 300,
-      }}>
-        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-          <Space style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
-            <TodoRadio isNew={true} />
-            <div style={{ flex: 1 }}>
-              <Input
-                value={newTodo.title}
-                onChange={(e) => onTitleChange(e.target.value)}
-                variant='borderless'
-                ref={editRef}
-                suffix={(
-                  <Dropdown
-                    menu={{ items, onClick }}
-                    trigger={['click']}
-                  >
-                    <MenuOutlined />
-                  </Dropdown>
-                )}
-              />
-            </div>
-          </Space>
-          <Space style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
-            <Tooltip color='cyan' title={(
-              <>
-                <Typography.Text keyboard style={{ color: colorTextLightSolid }}>esc</Typography.Text>
-                退出编辑
-              </>
-            )}>
+      <>
+        <div style={{
+          border: '1px solid #d9d9d9',
+          borderRadius: '4px',
+          padding: '12px 16px',
+          transition: 'border 0.2s ease-in-out',
+          minWidth: 300,
+        }}>
+          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+            <Space style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+              <TodoRadio isNew={true} />
+              <div style={{ flex: 1 }}>
+                <Input
+                  value={newTodo.title}
+                  onChange={(e) => onTitleChange(e.target.value)}
+                  variant='borderless'
+                  ref={editRef}
+                  suffix={(
+                    <MenuOutlined onClick={showModal} />
+                  )}
+                />
+              </div>
+            </Space>
+            <Space style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
+              <Tooltip color='cyan' title={(
+                <>
+                  <Typography.Text keyboard style={{ color: colorTextLightSolid }}>esc</Typography.Text>
+                  退出编辑
+                </>
+              )}>
+                <Button
+                  icon={<CloseOutlined />}
+                  type="default"
+                  onClick={handleCancel}
+                  size="small"
+                />
+              </Tooltip>
+
               <Button
-                icon={<CloseOutlined />}
-                type="default"
-                onClick={handleCancel}
+                icon={<CheckOutlined />}
+                type="primary"
+                onClick={handleConfirm}
                 size="small"
               />
-            </Tooltip>
-
-            <Button
-              icon={<CheckOutlined />}
-              type="primary"
-              onClick={handleConfirm}
-              size="small"
-            />
+            </Space>
           </Space>
-        </Space>
-      </div>
+        </div>
+        <Modal
+          open={isModalOpen}
+          onCancel={closeModal}
+          footer={null}
+        >
+          <TodoForm
+            todo={newTodo}
+            onEdit={(t) => { setNewTodo(t); closeModal(); }}
+          />
+        </Modal>
+      </>
     )
   }
 
