@@ -2,12 +2,7 @@ import { List, Typography, Button, Flex } from 'antd';
 import { useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import TodoItem from './TodoItem';
-import { Todo } from '@cotask/types';
-
-export type Group = {
-  id: number;
-  name: string;
-};
+import { Group, Todo } from '@cotask/types';
 
 export type Props = {
   todos: Todo[];

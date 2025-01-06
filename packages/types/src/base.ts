@@ -9,6 +9,11 @@ export type Todo = {
   createAt: string;
 };
 
+export type Group = {
+  id: number;
+  name: string;
+};
+
 export const frequencyTypes = ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'] as const;
 export type FrequencyTypes = (typeof frequencyTypes)[number];
 
