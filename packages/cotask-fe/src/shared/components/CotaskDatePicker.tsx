@@ -3,30 +3,14 @@ import { Button, Checkbox, InputNumber, InputNumberProps, Radio, Space, Typograp
 import { useEffect, useState } from "react";
 import CustomCheckboxGrid from "./CustomCheckbox";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-
-export const frequencyTypes = ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'] as const;
-
-type DailyPickerProps = {
-  onDaysChange: (val: number) => void
-}
-
-type WeeklyPickerProps = {
-  onWeeksChange: (val: { weeks: number, selectDays: number[] }) => void
-}
-
-type MonthlyPickerProps = {
-  onMonthsChange: (val: { months: number, selectDays: number[] }) => void
-}
-
-type YearlyPickerProps = {
-  onYearsChange: (val: { years: number, selectMonths: number[] }) => void
-}
-
-export type FrequencyOptions =
-  | { type: 'DAILY', options: Parameters<DailyPickerProps['onDaysChange']>[0] }
-  | { type: 'WEEKLY', options: Parameters<WeeklyPickerProps['onWeeksChange']>[0] }
-  | { type: 'MONTHLY', options: Parameters<MonthlyPickerProps['onMonthsChange']>[0] }
-  | { type: 'YEARLY', options: Parameters<YearlyPickerProps['onYearsChange']>[0] }
+import {
+  frequencyTypes,
+  FrequencyOptions,
+  DailyPickerProps,
+  WeeklyPickerProps,
+  MonthlyPickerProps,
+  YearlyPickerProps,
+} from '@cotask/types';
 
 export type Props = {
   initialFrequency?: typeof frequencyTypes[number],

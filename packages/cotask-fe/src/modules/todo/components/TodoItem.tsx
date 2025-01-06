@@ -1,10 +1,10 @@
 import { Button, Dropdown, Input, InputRef, Modal, Popconfirm, Space, Tooltip, Typography } from "antd";
-import { Todo } from "./TodoList";
 import { MenuProps } from "antd/lib";
 import { useEffect, useRef, useState } from "react";
 import useToken from "antd/es/theme/useToken";
 import { CheckOutlined, CloseOutlined, InfoCircleFilled, InfoCircleTwoTone, MenuOutlined } from "@ant-design/icons";
 import TodoForm from "./TodoForm";
+import { Todo } from "@cotask/types";
 
 export type Props = {
   todo: Todo,

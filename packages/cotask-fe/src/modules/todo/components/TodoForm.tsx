@@ -1,12 +1,11 @@
 import { Form, Input, Button, Select, DatePicker, Typography, Row, Col } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import { Todo } from './TodoList';
 import Modal from 'antd/es/modal/Modal';
 import { useState } from 'react';
-import CotaskDatePicker, { FrequencyOptions, frequencyTypes } from '@cotask/shared/components/CotaskDatePicker';
-import { useUpdateEffect } from '@cotask/shared/hooks/useUpdateEffect';
+import CotaskDatePicker from '@cotask-fe/shared/components/CotaskDatePicker';
+import { FrequencyOptions, frequencyTypes, Todo } from '@cotask/types';
 import dayjs from 'dayjs';
-import { useLastState } from '@cotask/shared/hooks/useLastState';
+import { useLastState } from '@cotask-fe/shared/hooks/useLastState';
 
 export type Props = {
   todo: Todo;
