@@ -3,7 +3,9 @@
   "description": "multiplayer collaboration todolist",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" --ignore-pattern \"packages/**/dist\" --ignore-pattern \"packages/**/node_modules\"",
+    "lint-fix": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix --ignore-pattern \"packages/**/dist\" --ignore-pattern \"packages/**//node_modules\""
   },
   "keywords": [
     "todolist",
@@ -17,6 +19,12 @@
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@commitlint/types": "^19.5.0",
-    "husky": "^9.1.7"
+    "@typescript-eslint/eslint-plugin": "^8.19.0",
+    "@typescript-eslint/parser": "^8.19.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.7",
+    "prettier": "^3.4.2"
   }
 }
