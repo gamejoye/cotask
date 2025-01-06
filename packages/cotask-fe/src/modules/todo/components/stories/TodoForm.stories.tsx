@@ -30,4 +30,4 @@ export const Default = Template.bind({});
   },
   onEdit: fn(),
   onCancel: fn(),
-}
+};

@@ -1,5 +1,3 @@
 export default function App() {
-  return (
-    <div>Cotask</div>
-  )
+  return <div>Cotask</div>;
 }

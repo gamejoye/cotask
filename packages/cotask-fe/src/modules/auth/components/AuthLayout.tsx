@@ -1,4 +1,4 @@
-import { ConfigProvider, Layout } from "antd";
+import { ConfigProvider, Layout } from 'antd';
 
 const { Header, Content, Footer } = Layout;
 

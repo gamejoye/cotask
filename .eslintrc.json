@@ -16,11 +16,25 @@
     "max-len": [
       "warn",
       {
-        "code": 100
+        "code": 100,
+        "ignoreUrls": true,
+        "ignoreComments": false
       }
     ],
     "@typescript-eslint/no-explicit-any": "off",
-    "no-empty": ["error", { "allowEmptyCatch": true }],
-    "no-console": "off"
+    "no-empty": [
+      "error",
+      {
+        "allowEmptyCatch": true
+      }
+    ],
+    "no-console": "off",
+    "@typescript-eslint/no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true
+      }
+    ]
   }
 }

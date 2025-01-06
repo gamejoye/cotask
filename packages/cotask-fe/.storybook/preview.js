@@ -12,8 +12,6 @@ const preview = {
 
 import { withConsole } from '@storybook/addon-console';
 
-export const decorators = [
-  (storyFn, context) => withConsole()(storyFn)(context),
-];
+export const decorators = [(storyFn, context) => withConsole()(storyFn)(context)];
 
 export default preview;

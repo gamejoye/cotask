@@ -18,7 +18,7 @@ export default {
 };
 
 const Template = (args: Props) => (
-  <AuthLayout {...args} >
+  <AuthLayout {...args}>
     <SignInForm onFinish={fn()} />
   </AuthLayout>
 );

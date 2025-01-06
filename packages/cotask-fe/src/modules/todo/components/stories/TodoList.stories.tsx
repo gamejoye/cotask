@@ -51,12 +51,11 @@ export const Default = Template.bind({});
   loadMore: fn(),
   hasMore: false,
   showCompleted: false,
-}
+};
 
 export const EmptyList = Template.bind({});
 (EmptyList as any).args = {
   ...(Default as any).args,
   todos: [],
   showCompleted: false,
-}
-
+};

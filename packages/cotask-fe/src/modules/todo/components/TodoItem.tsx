@@ -1,20 +1,20 @@
-import { Button, Dropdown, Input, InputRef, Modal, Popconfirm, Space, Tooltip, Typography } from "antd";
-import { MenuProps } from "antd/lib";
-import { useEffect, useRef, useState } from "react";
-import useToken from "antd/es/theme/useToken";
-import { CheckOutlined, CloseOutlined, InfoCircleFilled, InfoCircleTwoTone, MenuOutlined } from "@ant-design/icons";
-import TodoForm from "./TodoForm";
-import { Todo } from "@cotask/types";
+import { Button, Dropdown, Input, InputRef, Modal, Space, Tooltip, Typography } from 'antd';
+import { MenuProps } from 'antd/lib';
+import { useEffect, useRef, useState } from 'react';
+import useToken from 'antd/es/theme/useToken';
+import { CheckOutlined, CloseOutlined, MenuOutlined } from '@ant-design/icons';
+import TodoForm from './TodoForm';
+import { Todo } from '@cotask/types';
 
 export type Props = {
-  todo: Todo,
-  initialIsEdting: boolean,
-  onDelete: (todo: Todo) => void,
-  onComplete: (todo: Todo) => void,
-  onEdit: (todo: Todo) => void,
-  onCancel?: () => void,
-  onDoubleClick?: () => void
-}
+  todo: Todo;
+  initialIsEdting: boolean;
+  onDelete: (todo: Todo) => void;
+  onComplete: (todo: Todo) => void;
+  onEdit: (todo: Todo) => void;
+  onCancel?: () => void;
+  onDoubleClick?: () => void;
+};
 
 export default function TodoItem({
   todo,
@@ -23,7 +23,7 @@ export default function TodoItem({
   onDelete,
   onEdit,
   onCancel,
-  onDoubleClick
+  onDoubleClick,
 }: Props) {
   const [newTodo, setNewTodo] = useState<Todo>(todo);
   const editRef = useRef<InputRef>(null);
@@ -55,83 +55,83 @@ export default function TodoItem({
     };
   }, [newTodo]);
 
-  const onClick = () => {
-
-  }
-
   const onTitleChange = (value: string) => {
     setNewTodo({ ...newTodo, title: value });
-  }
+  };
 
   const handleCancel = () => {
     onCancel && onCancel();
-  }
+  };
 
   const handleConfirm = () => {
     onEdit(newTodo);
-  }
+  };
   // 编辑态
   if (initialIsEdting) {
     return (
       <>
-        <div style={{
-          border: '1px solid #d9d9d9',
-          borderRadius: '4px',
-          padding: '12px 16px',
-          transition: 'border 0.2s ease-in-out',
-          minWidth: 300,
-        }}>
-          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+        <div
+          style={{
+            border: '1px solid #d9d9d9',
+            borderRadius: '4px',
+            padding: '12px 16px',
+            transition: 'border 0.2s ease-in-out',
+            minWidth: 300,
+          }}
+        >
+          <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
             <Space style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
               <TodoRadio isNew={true} />
               <div style={{ flex: 1 }}>
                 <Input
                   value={newTodo.title}
-                  onChange={(e) => onTitleChange(e.target.value)}
+                  onChange={e => onTitleChange(e.target.value)}
                   variant='borderless'
                   ref={editRef}
-                  suffix={(
-                    <MenuOutlined onClick={showModal} />
-                  )}
+                  suffix={<MenuOutlined onClick={showModal} />}
                 />
               </div>
             </Space>
             <Space style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
-              <Tooltip color='cyan' title={(
-                <>
-                  <Typography.Text keyboard style={{ color: colorTextLightSolid }}>esc</Typography.Text>
-                  退出编辑
-                </>
-              )}>
+              <Tooltip
+                color='cyan'
+                title={
+                  <>
+                    <Typography.Text keyboard style={{ color: colorTextLightSolid }}>
+                      esc
+                    </Typography.Text>
+                    退出编辑
+                  </>
+                }
+              >
                 <Button
                   icon={<CloseOutlined />}
-                  type="default"
+                  type='default'
                   onClick={handleCancel}
-                  size="small"
+                  size='small'
                 />
               </Tooltip>
 
               <Button
                 icon={<CheckOutlined />}
-                type="primary"
+                type='primary'
                 onClick={handleConfirm}
-                size="small"
+                size='small'
               />
             </Space>
           </Space>
         </div>
-        <Modal
-          open={isModalOpen}
-          onCancel={closeModal}
-          footer={null}
-        >
+        <Modal open={isModalOpen} onCancel={closeModal} footer={null}>
           <TodoForm
             todo={newTodo}
-            onEdit={(t) => { setNewTodo(t); closeModal(); }}
+            onEdit={t => {
+              setNewTodo(t);
+              closeModal();
+            }}
           />
         </Modal>
       </>
-    )
+    );
   }
 
   // 常态
@@ -142,20 +142,17 @@ export default function TodoItem({
       onEdit={() => onEdit(todo)}
     >
       <Space style={{ display: 'flex', width: '100%', alignItems: 'center', minWidth: 300 }}>
-        <TodoRadio
-          isNew={false}
-          onClick={() => onComplete(todo)}
-        />
+        <TodoRadio isNew={false} onClick={() => onComplete(todo)} />
         <div style={{ flex: 1 }} onDoubleClick={onDoubleClick}>
           <Typography.Text delete={todo.completed}>{todo.title}</Typography.Text>
           <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {'2024/12/17'}</div>
         </div>
       </Space>
     </TodoItemRightClickMenu>
-  )
+  );
 }
 
-function TodoRadio({ isNew, onClick }: { isNew: boolean, onClick?: () => void }) {
+function TodoRadio({ isNew, onClick }: { isNew: boolean; onClick?: () => void }) {
   return (
     <div
       onClick={() => onClick && onClick()}
@@ -171,16 +168,17 @@ function TodoRadio({ isNew, onClick }: { isNew: boolean, onClick?: () => void })
         marginRight: '16px',
       }}
     />
-  )
+  );
 }
 
 type RightClickMenuProps = {
-  children: React.ReactNode,
-  onDelete: () => void,
-  onComplete: () => void,
-  onEdit: () => void,
-}
+  children: React.ReactNode;
+  onDelete: () => void;
+  onComplete: () => void;
+  onEdit: () => void;
+};
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function TodoItemRightClickMenu({ children, onDelete, onComplete, onEdit }: RightClickMenuProps) {
   const items: MenuProps['items'] = [
     {
@@ -202,8 +200,8 @@ function TodoItemRightClickMenu({ children, onDelete, onComplete, onEdit }: Righ
         {
           label: '高',
           key: '2/3',
-        }
-      ]
+        },
+      ],
     },
     {
       label: '删除',
@@ -216,7 +214,7 @@ function TodoItemRightClickMenu({ children, onDelete, onComplete, onEdit }: Righ
     if (key === '1') {
       onComplete();
     } else if (key === '2') {
-
+      // TODO
     } else if (key === '3') {
       onDelete();
     }
@@ -225,19 +223,22 @@ function TodoItemRightClickMenu({ children, onDelete, onComplete, onEdit }: Righ
   return (
     <Dropdown
       menu={{ items, onClick }}
-      trigger={['contextMenu']} onOpenChange={(isOpen) => {
+      trigger={['contextMenu']}
+      onOpenChange={isOpen => {
         setIsOpen(isOpen);
       }}
     >
-      <div style={{
-        border: isOpen ? '1px solid #1890ff' : '1px solid #d9d9d9',
-        borderRadius: '4px',
-        padding: '12px 16px',
-        transition: 'border 0.2s ease-in-out',
-        boxShadow: isOpen ? '0 0 8px rgba(24, 144, 255, 0.5)' : 'none',
-      }}>
+      <div
+        style={{
+          border: isOpen ? '1px solid #1890ff' : '1px solid #d9d9d9',
+          borderRadius: '4px',
+          padding: '12px 16px',
+          transition: 'border 0.2s ease-in-out',
+          boxShadow: isOpen ? '0 0 8px rgba(24, 144, 255, 0.5)' : 'none',
+        }}
+      >
         {children}
       </div>
     </Dropdown>
   );
-};
+}

@@ -1,29 +1,24 @@
-import {
-  LockOutlined,
-  MailOutlined,
-} from '@ant-design/icons';
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
 
-import {
-  LoginForm,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { LoginForm, ProFormText } from '@ant-design/pro-components';
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 export type Props = {
-  onFinish: (params: {}) => void
-}
+  onFinish: (params: FormData) => void;
+};
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function SignInForm({ onFinish }: Props) {
   return (
     <>
-      <LoginForm
-        title="Cotask"
-        subTitle="一款面向团队的多人协同待办事项工具"
-        onFinish={onFinish}
-      >
+      <LoginForm title='Cotask' subTitle='一款面向团队的多人协同待办事项工具' onFinish={onFinish}>
         <ProFormText
-          name="email"
+          name='email'
           fieldProps={{
             size: 'large',
             prefix: <MailOutlined className={'prefixIcon'} />,
@@ -37,11 +32,11 @@ function SignInForm({ onFinish }: Props) {
             {
               pattern: emailRegex,
               message: '请输入正确的邮箱！',
-            }
+            },
           ]}
         />
         <ProFormText.Password
-          name="password"
+          name='password'
           fieldProps={{
             size: 'large',
             prefix: <LockOutlined className={'prefixIcon'} />,
@@ -55,12 +50,12 @@ function SignInForm({ onFinish }: Props) {
             {
               min: 6,
               message: '密码不能少于6位！',
-            }
+            },
           ]}
         />
       </LoginForm>
     </>
-  )
+  );
 }
 
 export default SignInForm;

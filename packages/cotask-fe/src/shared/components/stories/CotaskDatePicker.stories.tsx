@@ -22,13 +22,11 @@ export const Controlled = Template.bind({});
   onConfirm: fn(),
   frequency: 'DAILY',
   onChange: fn(),
-}
+};
 
 export const UnControlled = Template.bind({});
 (UnControlled as any).args = {
   onConfirm: fn(),
   initialFrequency: 'WEEKLY',
   onChange: fn(),
-}
-
-
+};

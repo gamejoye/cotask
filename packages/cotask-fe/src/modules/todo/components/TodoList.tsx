@@ -7,20 +7,20 @@ import { Todo } from '@cotask/types';
 export type Group = {
   id: number;
   name: string;
-}
+};
 
 export type Props = {
-  todos: Todo[],
-  group: Group,
-  onDelete: (todo: Todo) => void,
-  onComplete: (todo: Todo) => void,
-  onEdit: (todo: Todo) => void,
-  loadMore: () => void,
-  hasMore: boolean,
-  showCompleted?: boolean,
-}
+  todos: Todo[];
+  group: Group;
+  onDelete: (todo: Todo) => void;
+  onComplete: (todo: Todo) => void;
+  onEdit: (todo: Todo) => void;
+  loadMore: () => void;
+  hasMore: boolean;
+  showCompleted?: boolean;
+};
 
-type DataSource = ({ type: 'edit' | 'show', todo: Todo })[];
+type DataSource = { type: 'edit' | 'show'; todo: Todo }[];
 
 export default function TodoList({
   todos,
@@ -28,7 +28,9 @@ export default function TodoList({
   onDelete,
   onComplete,
   onEdit,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadMore,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hasMore,
   showCompleted = false,
 }: Props) {
@@ -43,11 +45,13 @@ export default function TodoList({
       });
     }
     dataSource.push(
-      ...(showCompleted ? todos : todos.filter((todo) => !todo.completed)).map<DataSource[number]>((todo) => ({
-        type: editing?.id === todo.id ? 'edit' : 'show',
-        todo,
-      }))
-    )
+      ...(showCompleted ? todos : todos.filter(todo => !todo.completed)).map<DataSource[number]>(
+        todo => ({
+          type: editing?.id === todo.id ? 'edit' : 'show',
+          todo,
+        })
+      )
+    );
     return dataSource;
   }, [todos, showCompleted, creating, editing]);
 
@@ -55,19 +59,19 @@ export default function TodoList({
     if (creating) return;
     if (editing) return;
     setCreating(true);
-  }
+  };
 
   const handleDoubleClick = (todo: Todo) => {
     if (creating) return;
     if (editing) return;
     setEditing(todo);
-  }
+  };
 
   const wrapperOnEdit: typeof onEdit = (...args) => {
     onEdit(...args);
     setEditing(null);
     setCreating(false);
-  }
+  };
   return (
     <List
       dataSource={dataSource}
@@ -84,7 +88,7 @@ export default function TodoList({
             type='dashed'
             icon={<PlusOutlined />}
             onClick={handleNewTodo}
-            size="middle"
+            size='middle'
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -101,7 +105,17 @@ export default function TodoList({
           onComplete={onComplete}
           onDelete={onDelete}
           onEdit={wrapperOnEdit}
-          onCancel={creating ? () => { setCreating(false) } : editing ? () => { setEditing(null) } : undefined}
+          onCancel={
+            creating
+              ? () => {
+                  setCreating(false);
+                }
+              : editing
+                ? () => {
+                    setEditing(null);
+                  }
+                : undefined
+          }
           onDoubleClick={() => handleDoubleClick(todo)}
         />
       )}

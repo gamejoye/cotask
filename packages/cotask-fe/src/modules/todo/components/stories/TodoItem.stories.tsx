@@ -29,7 +29,7 @@ export const Default = Template.bind({});
   onEdit: fn(),
   onCancel: fn(),
   initialIsEdting: false,
-}
+};
 
 export const Editing = Template.bind({});
 (Editing as any).args = {
@@ -43,6 +43,4 @@ export const Editing = Template.bind({});
   onEdit: fn(),
   onCancel: fn(),
   initialIsEdting: true,
-}
-
-
+};

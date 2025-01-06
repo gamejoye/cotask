@@ -1,8 +1,8 @@
-import { Button, Checkbox, InputNumber, InputNumberProps, Radio, Space, Typography } from "antd";
+import { Button, Checkbox, InputNumber, InputNumberProps, Radio, Space, Typography } from 'antd';
 
-import { useEffect, useState } from "react";
-import CustomCheckboxGrid from "./CustomCheckbox";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { useEffect, useState } from 'react';
+import CustomCheckboxGrid from './CustomCheckbox';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import {
   frequencyTypes,
   FrequencyOptions,
@@ -13,50 +13,59 @@ import {
 } from '@cotask/types';
 
 export type Props = {
-  initialFrequency?: typeof frequencyTypes[number],
-  frequency?: typeof frequencyTypes[number],
-  onChange?: (frequency: typeof frequencyTypes[number]) => void,
-  onConfirm: (arg?: FrequencyOptions) => void,
-  onCancel?: () => void,
-}
+  initialFrequency?: (typeof frequencyTypes)[number];
+  frequency?: (typeof frequencyTypes)[number];
+  onChange?: (frequency: (typeof frequencyTypes)[number]) => void;
+  onConfirm: (arg?: FrequencyOptions) => void;
+  onCancel?: () => void;
+};
 
 export default function CotaskDatePicker({
   initialFrequency,
   frequency,
   onChange,
   onConfirm,
-  onCancel
+  onCancel,
 }: Props) {
   const [vals, setVals] = useState<FrequencyOptions | undefined>();
-  const [interalVal, setInteralVal] = useState<typeof frequencyTypes[number]>(initialFrequency || frequencyTypes[0]);
+  const [interalVal, setInteralVal] = useState<(typeof frequencyTypes)[number]>(
+    initialFrequency || frequencyTypes[0]
+  );
   const isControlled = frequency !== undefined;
   let component = null;
   switch (isControlled ? frequency : interalVal) {
     case 'DAILY':
-      component = <DailyPicker onDaysChange={(val) => setVals({ type: 'DAILY', options: val })} />;
+      component = <DailyPicker onDaysChange={val => setVals({ type: 'DAILY', options: val })} />;
       break;
     case 'WEEKLY':
-      component = <WeeklyPicker onWeeksChange={(val) => setVals({ type: 'WEEKLY', options: val })} />;
+      component = <WeeklyPicker onWeeksChange={val => setVals({ type: 'WEEKLY', options: val })} />;
       break;
     case 'MONTHLY':
-      component = <MonthlyPicker onMonthsChange={(val) => setVals({ type: 'MONTHLY', options: val })} />;
+      component = (
+        <MonthlyPicker onMonthsChange={val => setVals({ type: 'MONTHLY', options: val })} />
+      );
       break;
     case 'YEARLY':
-      component = <YearlyPicker onYearsChange={(val) => setVals({ type: 'YEARLY', options: val })} />;
+      component = <YearlyPicker onYearsChange={val => setVals({ type: 'YEARLY', options: val })} />;
       break;
   }
   return (
-    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+    <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
       <Space>
         <Typography.Text>频率</Typography.Text>
-        <Radio.Group name="频次" defaultValue={initialFrequency || frequencyTypes[0]} value={isControlled ? frequency : interalVal} onChange={(e) => {
-          if (isControlled) {
-            onChange && onChange(e.target.value);
-          } else {
-            setInteralVal(e.target.value);
-          }
-        }}>
-          {frequencyTypes.map((type) => (
+        <Radio.Group
+          name='频次'
+          defaultValue={initialFrequency || frequencyTypes[0]}
+          value={isControlled ? frequency : interalVal}
+          onChange={e => {
+            if (isControlled) {
+              onChange && onChange(e.target.value);
+            } else {
+              setInteralVal(e.target.value);
+            }
+          }}
+        >
+          {frequencyTypes.map(type => (
             <Radio key={type} value={type}>
               {type}
             </Radio>
@@ -67,24 +76,24 @@ export default function CotaskDatePicker({
       <Space style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
         <Button
           icon={<CloseOutlined />}
-          type="default"
+          type='default'
           onClick={() => onCancel && onCancel()}
-          size="small"
+          size='small'
         />
 
         <Button
           icon={<CheckOutlined />}
-          type="primary"
+          type='primary'
           onClick={() => onConfirm(vals)}
-          size="small"
+          size='small'
         />
       </Space>
-    </Space >
+    </Space>
   );
 }
 
 function DailyPicker({ onDaysChange }: DailyPickerProps) {
-  const handleChange: InputNumberProps['onChange'] = (value) => {
+  const handleChange: InputNumberProps['onChange'] = value => {
     onDaysChange(value !== null ? Number(value) : 1);
   };
   useEffect(() => {
@@ -96,7 +105,7 @@ function DailyPicker({ onDaysChange }: DailyPickerProps) {
       <InputNumber min={1} max={9999} defaultValue={1} onChange={handleChange} />
       <span>天</span>
     </Space>
-  )
+  );
 }
 
 const weeklyOptions = [
@@ -112,8 +121,8 @@ const weeklyOptions = [
 function WeeklyPicker({ onWeeksChange }: WeeklyPickerProps) {
   const [weeks, setWeeks] = useState(1);
   const [selectDays, setSelectDays] = useState<number[]>([]);
-  const handleWeeksChange: InputNumberProps['onChange'] = (value) => {
-    value = value !== null ? Number(value) : 1
+  const handleWeeksChange: InputNumberProps['onChange'] = value => {
+    value = value !== null ? Number(value) : 1;
     onWeeksChange({
       weeks: value,
       selectDays,
@@ -124,19 +133,19 @@ function WeeklyPicker({ onWeeksChange }: WeeklyPickerProps) {
   const handleSelectDaysChange = (days: number[]) => {
     onWeeksChange({
       weeks,
-      selectDays: days
+      selectDays: days,
     });
     setSelectDays(days);
-  }
+  };
   useEffect(() => {
     onWeeksChange({
       weeks: 1,
-      selectDays: []
+      selectDays: [],
     });
   }, []);
 
   return (
-    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+    <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
       <Space>
         <span>每</span>
         <InputNumber min={1} max={9999} defaultValue={1} onChange={handleWeeksChange} />
@@ -144,16 +153,20 @@ function WeeklyPicker({ onWeeksChange }: WeeklyPickerProps) {
       </Space>
       <Checkbox.Group options={weeklyOptions} onChange={handleSelectDaysChange} />
     </Space>
-  )
+  );
 }
 
-const monthlyOptions = Array.from({ length: 31 }, (_, i) => ({ key: (i + 1) + '', value: (i + 1) + '', label: (i + 1) + '' }));
+const monthlyOptions = Array.from({ length: 31 }, (_, i) => ({
+  key: i + 1 + '',
+  value: i + 1 + '',
+  label: i + 1 + '',
+}));
 
 function MonthlyPicker({ onMonthsChange }: MonthlyPickerProps) {
   const [months, setMonths] = useState(1);
   const [selectDays, setSelectDays] = useState<number[]>([]);
-  const handleMonthsChange: InputNumberProps['onChange'] = (value) => {
-    value = value !== null ? Number(value) : 1
+  const handleMonthsChange: InputNumberProps['onChange'] = value => {
+    value = value !== null ? Number(value) : 1;
     onMonthsChange({
       months: value,
       selectDays,
@@ -165,17 +178,17 @@ function MonthlyPicker({ onMonthsChange }: MonthlyPickerProps) {
     onMonthsChange({
       months,
       selectDays: values,
-    })
+    });
     setSelectDays(values);
   };
   useEffect(() => {
     onMonthsChange({
       months: 1,
-      selectDays: []
+      selectDays: [],
     });
   }, []);
   return (
-    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+    <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
       <Space>
         <span>每</span>
         <InputNumber min={1} max={9999} defaultValue={1} onChange={handleMonthsChange} />
@@ -183,16 +196,20 @@ function MonthlyPicker({ onMonthsChange }: MonthlyPickerProps) {
       </Space>
       <CustomCheckboxGrid options={monthlyOptions} onChange={onChange} />
     </Space>
-  )
+  );
 }
 
-const yearlyOptions = Array.from({ length: 12 }, (_, i) => ({ key: (i + 1) + '', value: (i + 1) + '', label: (i + 1) + '月' }));
+const yearlyOptions = Array.from({ length: 12 }, (_, i) => ({
+  key: i + 1 + '',
+  value: i + 1 + '',
+  label: i + 1 + '月',
+}));
 
 function YearlyPicker({ onYearsChange }: YearlyPickerProps) {
   const [years, setYears] = useState(1);
   const [selectMonths, setSelectMonths] = useState<number[]>([]);
-  const handleYearsChange: InputNumberProps['onChange'] = (value) => {
-    value = value !== null ? Number(value) : 1
+  const handleYearsChange: InputNumberProps['onChange'] = value => {
+    value = value !== null ? Number(value) : 1;
     onYearsChange({
       years: value,
       selectMonths,
@@ -204,17 +221,17 @@ function YearlyPicker({ onYearsChange }: YearlyPickerProps) {
     onYearsChange({
       years,
       selectMonths: values,
-    })
+    });
     setSelectMonths(values);
-  }
+  };
   useEffect(() => {
     onYearsChange({
       years: 1,
-      selectMonths: []
+      selectMonths: [],
     });
   }, []);
   return (
-    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+    <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
       <Space>
         <span>每</span>
         <InputNumber min={1} max={9999} defaultValue={1} onChange={handleYearsChange} />
@@ -222,5 +239,5 @@ function YearlyPicker({ onYearsChange }: YearlyPickerProps) {
       </Space>
       <CustomCheckboxGrid options={yearlyOptions} onChange={onChange} />
     </Space>
-  )
+  );
 }

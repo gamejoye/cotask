@@ -1,6 +1,6 @@
-import { Typography } from "antd";
-import useToken from "antd/es/theme/useToken";
-import { useState } from "react";
+import { Typography } from 'antd';
+import useToken from 'antd/es/theme/useToken';
+import { useState } from 'react';
 
 export type Props = {
   options: {
@@ -9,14 +9,16 @@ export type Props = {
     value: string;
   }[];
   onChange?: (checkedValues: string[]) => void;
-}
+};
 
 export default function CustomCheckboxGrid({ options, onChange }: Props) {
   const { colorBgBase, colorPrimary, colorBorder } = useToken()[1];
   const [selecteds, setSelecteds] = useState<string[]>([]);
 
   const toggle = (day: string) => {
-    const newSelected = selecteds.includes(day) ? selecteds.filter(d => d !== day) : [...selecteds, day];
+    const newSelected = selecteds.includes(day)
+      ? selecteds.filter(d => d !== day)
+      : [...selecteds, day];
     setSelecteds(newSelected);
     onChange && onChange(newSelected);
   };
@@ -31,7 +33,7 @@ export default function CustomCheckboxGrid({ options, onChange }: Props) {
             ...gridItemStyle,
             backgroundColor: selecteds.includes(value) ? colorPrimary : colorBgBase,
             border: `1px solid ${colorBorder}`,
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
         >
           <Typography.Text type='secondary'>{label}</Typography.Text>
@@ -39,13 +41,13 @@ export default function CustomCheckboxGrid({ options, onChange }: Props) {
       ))}
     </div>
   );
-};
+}
 
 const gridContainerStyle: React.CSSProperties = {
   display: 'grid',
   gridTemplateColumns: 'repeat(7, 40px)',
   gap: '8px',
-  justifyContent: 'center'
+  justifyContent: 'center',
 };
 
 const gridItemStyle: React.CSSProperties = {
@@ -58,5 +60,5 @@ const gridItemStyle: React.CSSProperties = {
   fontSize: '16px',
   fontWeight: 'bold',
   userSelect: 'none',
-  transition: 'all 0.2s ease-in-out'
+  transition: 'all 0.2s ease-in-out',
 };
