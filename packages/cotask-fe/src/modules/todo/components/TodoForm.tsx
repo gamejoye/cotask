@@ -5,7 +5,7 @@ import { useState } from 'react';
 import CotaskDatePicker from '@cotask-fe/shared/components/CotaskDatePicker';
 import { FrequencyOptions, frequencyTypes, Todo } from '@cotask/types';
 import dayjs from 'dayjs';
-import { useLastState } from '@cotask-fe/shared/hooks/useLastState';
+import { useLastState } from '@cotask-fe/shared/hooks';
 
 export type Props = {
   todo: Todo;
