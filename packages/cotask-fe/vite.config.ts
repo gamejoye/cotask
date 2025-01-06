@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@cotask': path.resolve(__dirname, 'src')
+      '@cotask-fe': path.resolve(__dirname, 'src'),
+      '@cotask/types': path.resolve(__dirname, '../types/src'),
     }
   }
 })
