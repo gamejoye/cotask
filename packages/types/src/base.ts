@@ -1,0 +1,35 @@
+export type Todo = {
+  id: number;
+  title: string;
+  completed: boolean;
+  frequency: FrequencyTypes;
+  frequencyOptions?: FrequencyOptions;
+  priority?: 'HIGH' | 'MEDIUM' | 'LOW';
+  dueDate: string;
+  createAt: string;
+}
+
+export const frequencyTypes = ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'] as const;
+export type FrequencyTypes = typeof frequencyTypes[number];
+
+export type DailyPickerProps = {
+  onDaysChange: (val: number) => void
+}
+
+export type WeeklyPickerProps = {
+  onWeeksChange: (val: { weeks: number, selectDays: number[] }) => void
+}
+
+export type MonthlyPickerProps = {
+  onMonthsChange: (val: { months: number, selectDays: number[] }) => void
+}
+
+export type YearlyPickerProps = {
+  onYearsChange: (val: { years: number, selectMonths: number[] }) => void
+}
+
+export type FrequencyOptions =
+  | { type: 'DAILY', options: Parameters<DailyPickerProps['onDaysChange']>[0] }
+  | { type: 'WEEKLY', options: Parameters<WeeklyPickerProps['onWeeksChange']>[0] }
+  | { type: 'MONTHLY', options: Parameters<MonthlyPickerProps['onMonthsChange']>[0] }
+  | { type: 'YEARLY', options: Parameters<YearlyPickerProps['onYearsChange']>[0] }
