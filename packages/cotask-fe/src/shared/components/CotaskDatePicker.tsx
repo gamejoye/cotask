@@ -29,6 +29,7 @@ export type FrequencyOptions =
   | { type: 'YEARLY', options: Parameters<YearlyPickerProps['onYearsChange']>[0] }
 
 export type Props = {
+  initialFrequency?: typeof frequencyTypes[number],
   frequency?: typeof frequencyTypes[number],
   onChange?: (frequency: typeof frequencyTypes[number]) => void,
   onConfirm: (arg?: FrequencyOptions) => void,
@@ -36,29 +37,35 @@ export type Props = {
 }
 
 export default function CotaskDatePicker({
+  initialFrequency,
   frequency,
   onChange,
   onConfirm,
   onCancel
 }: Props) {
   const [vals, setVals] = useState<FrequencyOptions | undefined>();
-  const [interalVal, setInteralVal] = useState<typeof frequencyTypes[number]>(frequency || frequencyTypes[0]);
+  const [interalVal, setInteralVal] = useState<typeof frequencyTypes[number]>(initialFrequency || frequencyTypes[0]);
   const isControlled = frequency !== undefined;
   let component = null;
-  if (frequency === 'DAILY') {
-    component = <DailyPicker onDaysChange={(val) => setVals({ type: 'DAILY', options: val })} />
-  } else if (frequency === 'WEEKLY') {
-    component = <WeeklyPicker onWeeksChange={(val) => setVals({ type: 'WEEKLY', options: val })} />
-  } else if (frequency === 'MONTHLY') {
-    component = <MonthlyPicker onMonthsChange={(val) => setVals({ type: 'MONTHLY', options: val })} />
-  } else if (frequency === 'YEARLY') {
-    component = <YearlyPicker onYearsChange={(val) => setVals({ type: 'YEARLY', options: val })} />
+  switch (isControlled ? frequency : interalVal) {
+    case 'DAILY':
+      component = <DailyPicker onDaysChange={(val) => setVals({ type: 'DAILY', options: val })} />;
+      break;
+    case 'WEEKLY':
+      component = <WeeklyPicker onWeeksChange={(val) => setVals({ type: 'WEEKLY', options: val })} />;
+      break;
+    case 'MONTHLY':
+      component = <MonthlyPicker onMonthsChange={(val) => setVals({ type: 'MONTHLY', options: val })} />;
+      break;
+    case 'YEARLY':
+      component = <YearlyPicker onYearsChange={(val) => setVals({ type: 'YEARLY', options: val })} />;
+      break;
   }
   return (
     <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
       <Space>
         <Typography.Text>频率</Typography.Text>
-        <Radio.Group name="频次" defaultValue={frequency || frequencyTypes[0]} value={isControlled ? frequency : interalVal} onChange={(e) => {
+        <Radio.Group name="频次" defaultValue={initialFrequency || frequencyTypes[0]} value={isControlled ? frequency : interalVal} onChange={(e) => {
           if (isControlled) {
             onChange && onChange(e.target.value);
           } else {
