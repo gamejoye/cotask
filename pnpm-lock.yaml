@@ -32,6 +32,9 @@ importers:
       antd:
         specifier: ^5.22.7
         version: 5.22.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -45,6 +48,9 @@ importers:
       '@chromatic-com/storybook':
         specifier: ^3.2.3
         version: 3.2.3(react@19.0.0)(storybook@8.4.7)
+      '@storybook/addon-console':
+        specifier: ^3.0.0
+        version: 3.0.0(@storybook/addon-actions@8.4.7(storybook@8.4.7))(react@19.0.0)
       '@storybook/addon-essentials':
         specifier: ^8.4.7
         version: 8.4.7(@types/react@19.0.2)(storybook@8.4.7)
@@ -766,6 +772,12 @@ packages:
     resolution: {integrity: sha512-I4/aErqtFiazcoWyKafOAm3bLpxTj6eQuH/woSbk1Yx+EzN+Dbrgx1Updy8//bsNtKkcrXETITreqHC+a57DHQ==}
     peerDependencies:
       storybook: ^8.4.7
+
+  '@storybook/addon-console@3.0.0':
+    resolution: {integrity: sha512-2pD2c9KNWuPIWlprqmWoZYrNQnG2qoDg7fAAXXNK6YDc5x/ZpK0cfOyfz/Gpdeje4QUmttZKAVjH0nOZDuxfvw==}
+    peerDependencies:
+      '@storybook/addon-actions': '*'
+      react: '*'
 
   '@storybook/addon-controls@8.4.7':
     resolution: {integrity: sha512-377uo5IsJgXLnQLJixa47+11V+7Wn9KcDEw+96aGCBCfLbWNH8S08tJHHnSu+jXg9zoqCAC23MetntVp6LetHA==}
@@ -3068,6 +3080,12 @@ snapshots:
       memoizerific: 1.11.3
       storybook: 8.4.7
       ts-dedent: 2.2.0
+
+  '@storybook/addon-console@3.0.0(@storybook/addon-actions@8.4.7(storybook@8.4.7))(react@19.0.0)':
+    dependencies:
+      '@storybook/addon-actions': 8.4.7(storybook@8.4.7)
+      '@storybook/global': 5.0.0
+      react: 19.0.0
 
   '@storybook/addon-controls@8.4.7(storybook@8.4.7)':
     dependencies:

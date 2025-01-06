@@ -19,6 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.3",
+    "@storybook/addon-console": "^3.0.0",
     "@storybook/addon-essentials": "^8.4.7",
     "@storybook/addon-interactions": "^8.4.7",
     "@storybook/addon-onboarding": "^8.4.7",
@@ -37,6 +38,7 @@
     "@ant-design/icons": "^5.5.2",
     "@ant-design/pro-components": "^2.8.2",
     "antd": "^5.22.7",
+    "dayjs": "^1.11.13",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-infinite-scroll-component": "^6.1.0"
