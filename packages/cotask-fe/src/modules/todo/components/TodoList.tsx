@@ -2,10 +2,16 @@ import { List, Typography, Button, Flex } from 'antd';
 import { useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import TodoItem from './TodoItem';
+import { FrequencyOptions } from '@cotask/shared/components/CotaskDatePicker';
 export type Todo = {
   id: number;
   title: string;
   completed: boolean;
+  frequency: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY' | 'NONE';
+  frequencyOptions?: FrequencyOptions;
+  priority?: 'HIGH' | 'MEDIUM' | 'LOW';
+  dueDate: string;
+  createAt: string;
 }
 
 export type Group = {
@@ -43,7 +49,7 @@ export default function TodoList({
     if (creating) {
       dataSource.push({
         type: 'edit',
-        todo: { id: 0, title: '', completed: false },
+        todo: { id: 0, title: '', completed: false, dueDate: '', createAt: '', frequency: 'NONE' },
       });
     }
     dataSource.push(
