@@ -1,61 +1,81 @@
+import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
-import TodoList, { Props } from '../TodoList';
+import TodoList from '../TodoList';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
-export default {
+const meta: Meta<typeof TodoList> = {
   title: 'Modules/Todos/TodoList',
   component: TodoList,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: 'centered',
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
 };
+export default meta;
 
-const Template = (args: Props) => <TodoList {...args} />;
+type Story = StoryObj<typeof TodoList>;
 
-export const Default = Template.bind({});
-(Default as any).args = {
-  todos: [
-    {
+export const Default: Story = {
+  args: {
+    todos: [
+      {
+        id: 1,
+        title: 'Todo 1',
+        completed: false,
+        frequency: 'NONE',
+        dueDate: '2023-02-01',
+        createAt: '2023-01-01',
+      },
+      {
+        id: 2,
+        title: 'Todo 2',
+        completed: true,
+        frequency: 'NONE',
+        dueDate: '2023-02-01',
+        createAt: '2023-01-01',
+      },
+      {
+        id: 3,
+        title: 'Todo 3',
+        completed: false,
+        frequency: 'NONE',
+        dueDate: '2023-02-01',
+        createAt: '2023-01-01',
+      },
+      {
+        id: 4,
+        title: 'Todo 4',
+        completed: true,
+        frequency: 'NONE',
+        dueDate: '2023-02-01',
+        createAt: '2023-01-01',
+      },
+    ],
+    group: {
       id: 1,
-      title: 'Todo 1',
-      completed: false,
+      name: '今天',
     },
-    {
-      id: 2,
-      title: 'Todo 2',
-      completed: true,
-    },
-    {
-      id: 3,
-      title: 'Todo 3',
-      completed: false,
-    },
-    {
-      id: 4,
-      title: 'Todo 4',
-      completed: true,
-    },
-  ],
-  group: {
-    id: 1,
-    name: '今天',
+    onDelete: fn(),
+    onComplete: fn(),
+    onEdit: fn(),
+    loadMore: fn(),
+    hasMore: false,
+    showCompleted: false,
   },
-  onDelete: fn(),
-  onComplete: fn(),
-  onEdit: fn(),
-  loadMore: fn(),
-  hasMore: false,
-  showCompleted: false,
 };
 
-export const EmptyList = Template.bind({});
-(EmptyList as any).args = {
-  ...(Default as any).args,
-  todos: [],
-  showCompleted: false,
+export const EmptyList: Story = {
+  args: {
+    todos: [],
+    group: {
+      id: 1,
+      name: '待办事项',
+    },
+    onDelete: fn(),
+    onComplete: fn(),
+    onEdit: fn(),
+    loadMore: fn(),
+    hasMore: false,
+    showCompleted: false,
+  },
 };
