@@ -19,6 +19,6 @@
       "@cotask-fe/*": ["packages/cotask-fe/src/*"]
     }
   },
-  "include": ["packages/**/*.ts", "packages/**/*.tsx"],
+  // "include": ["packages/**/*.ts", "packages/**/*.tsx"],
   "exclude": ["**/dist", "**/node_modules"]
 }
