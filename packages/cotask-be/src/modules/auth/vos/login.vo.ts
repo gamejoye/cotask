@@ -1,12 +1,12 @@
-import { User } from '@cotask-be/modules/users';
+import { UserVo } from '@cotask-be/modules/users';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginVo {
   @ApiProperty({
     description: '用户信息',
-    type: User,
+    type: UserVo,
   })
-  user: User;
+  user: UserVo;
 
   @ApiProperty({
     example: 'token',

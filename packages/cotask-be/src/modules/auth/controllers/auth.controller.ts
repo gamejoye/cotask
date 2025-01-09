@@ -25,7 +25,7 @@ export class AuthController {
     @Body() dto: LoginUserDto
   ): Promise<LoginVo> {
     return {
-      user,
+      user: new UserVo(user),
       token: 'TODO',
     };
   }
@@ -33,7 +33,7 @@ export class AuthController {
   @Post('register')
   @ApiBody({ type: RegisterUserDto })
   @ApiOperation({ summary: '用户注册' })
-  @ApiCreatedResponseResult({ model: User, description: '注册成功' })
+  @ApiCreatedResponseResult({ model: UserVo, description: '注册成功' })
   async register(@Body() dto: RegisterUserDto): Promise<UserVo> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { username, email, password, code } = dto;
