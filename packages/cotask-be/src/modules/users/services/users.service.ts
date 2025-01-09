@@ -1,14 +1,42 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { IUsersService } from './users.abstract';
 import { User } from '../entities/user.entity';
+import { USER_REPO } from '@cotask-be/common/constans/table-repos';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService extends IUsersService {
-  getByEmail(email: string): Promise<User> {
-    throw new Error('Method not implemented.');
+  constructor(@Inject(USER_REPO) protected userRepository: Repository<User>) {
+    super();
   }
-  create(email: string, password: string): Promise<User> {
-    throw new Error('Method not implemented.');
+
+  getByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
+  }
+  async create(
+    username: string,
+    email: string,
+    password: string,
+    avatarUrl: string
+  ): Promise<User> {
+    const user = await this.getByEmail(email);
+    if (user) {
+      throw new BadRequestException('Email is already registered');
+    }
+    // TODO password hash
+    const passwordHash = password;
+    const partial = this.userRepository.create({
+      username,
+      email,
+      passwordHash,
+      avatarUrl,
+    });
+    await this.userRepository.save(partial);
+    return this.userRepository.findOne({ where: { id: partial.id } });
   }
 }
