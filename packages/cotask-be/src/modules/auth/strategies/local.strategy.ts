@@ -15,8 +15,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(email: string, password: string): Promise<User> {
     // get user from database by email
     const user = await this.usersService.getByEmail(email);
-    console.log('user: ', user);
-    const correct = user !== null && (await bcrypt.compare(password, (user as any).passwordHash));
+    const correct = user !== null && (await bcrypt.compare(password, user.passwordHash));
     if (!correct) {
       throw new HttpException('email or password invalid', HttpStatus.UNAUTHORIZED);
     }
