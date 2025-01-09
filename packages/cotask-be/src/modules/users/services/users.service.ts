@@ -4,6 +4,7 @@ import { IUsersService } from './users.abstract';
 import { User } from '../entities/user.entity';
 import { USER_REPO } from '@cotask-be/common/constans/table-repos';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService extends IUsersService {
@@ -29,7 +30,7 @@ export class UsersService extends IUsersService {
       throw new BadRequestException('Email is already registered');
     }
     // TODO password hash
-    const passwordHash = password;
+    const passwordHash = await bcrypt.hash(password, 10);
     const partial = this.userRepository.create({
       username,
       email,
