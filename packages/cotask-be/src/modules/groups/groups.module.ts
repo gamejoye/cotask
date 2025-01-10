@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 import { Group } from './entities/group.entity';
 import { GroupsController } from './controllers/groups.controller';
 import { IGroupsService } from './services/groups.abstract';
-import { DatabaseModule } from '../database/database.module';
+import { DatabaseModule } from '@cotask-be/modules/database';
 
 @Module({
   imports: [DatabaseModule],

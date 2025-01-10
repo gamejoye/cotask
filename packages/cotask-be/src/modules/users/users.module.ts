@@ -5,7 +5,7 @@ import { IUsersService } from './services/users.abstract';
 import { DATA_SOURCE, USER_REPO } from '@cotask-be/common/constans/table-repos';
 import { DataSource } from 'typeorm';
 import { User } from './entities/user.entity';
-import { DatabaseModule } from '../database/database.module';
+import { DatabaseModule } from '@cotask-be/modules/database';
 
 @Module({
   imports: [DatabaseModule],
