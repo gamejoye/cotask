@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
 import TodoForm from '../TodoForm';
+import { FrequencyTypes, PriorityTypes } from '@cotask/types';
 
 const meta: Meta<typeof TodoForm> = {
   title: 'Modules/Todos/TodoForm',
@@ -21,9 +22,9 @@ export const Default: Story = {
       id: 1,
       title: 'Todo 1',
       completed: false,
-      priority: 'LOW',
+      priority: PriorityTypes.LOW,
       dueDate: '2023-02-01',
-      frequency: 'NONE',
+      frequency: FrequencyTypes.NONE,
       createAt: '2023-01-01',
     },
     onEdit: fn(),

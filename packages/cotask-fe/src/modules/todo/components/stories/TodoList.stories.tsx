@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
 import TodoList from '../TodoList';
+import { FrequencyTypes } from '@cotask/types';
 
 const meta: Meta<typeof TodoList> = {
   title: 'Modules/Todos/TodoList',
@@ -22,7 +23,7 @@ export const Default: Story = {
         id: 1,
         title: 'Todo 1',
         completed: false,
-        frequency: 'NONE',
+        frequency: FrequencyTypes.NONE,
         dueDate: '2023-02-01',
         createAt: '2023-01-01',
       },
@@ -30,7 +31,7 @@ export const Default: Story = {
         id: 2,
         title: 'Todo 2',
         completed: true,
-        frequency: 'NONE',
+        frequency: FrequencyTypes.NONE,
         dueDate: '2023-02-01',
         createAt: '2023-01-01',
       },
@@ -38,7 +39,7 @@ export const Default: Story = {
         id: 3,
         title: 'Todo 3',
         completed: false,
-        frequency: 'NONE',
+        frequency: FrequencyTypes.NONE,
         dueDate: '2023-02-01',
         createAt: '2023-01-01',
       },
@@ -46,7 +47,7 @@ export const Default: Story = {
         id: 4,
         title: 'Todo 4',
         completed: true,
-        frequency: 'NONE',
+        frequency: FrequencyTypes.NONE,
         dueDate: '2023-02-01',
         createAt: '2023-01-01',
       },
