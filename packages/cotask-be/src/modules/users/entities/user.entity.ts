@@ -1,4 +1,6 @@
+import { Group } from '@cotask-be/modules/groups';
 import { Todo } from '@cotask-be/modules/todos';
+import { UsersGroups } from '@cotask-be/modules/users-groups';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
@@ -28,4 +30,10 @@ export class User {
 
   @OneToMany(() => Todo, todo => todo.createdBy)
   todos: Todo[];
+
+  @OneToMany(() => Group, group => group.createdBy)
+  groups: Group[];
+
+  @OneToMany(() => UsersGroups, usersGroups => usersGroups.user)
+  usersGroups: UsersGroups[];
 }
