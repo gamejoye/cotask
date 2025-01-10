@@ -4,6 +4,7 @@
     "module": "esnext",
     "declaration": true,
     "declarationDir": "dist",
+    "emitDeclarationOnly": true,
     "baseUrl": ".",
     "outDir": "dist",
     "lib": ["esnext", "dom", "dom.iterable"],
@@ -15,7 +16,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "incremental": true
   },
-  "include": ["src", "../../global.d.ts"]
+  "include": ["src"]
 }

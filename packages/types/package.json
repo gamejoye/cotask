@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "description": "cotask types",
   "type": "module",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json"
+    "build": "rm -rf dist && tsc -p ./tsconfig.build.json && node ./build-types.js"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -18,5 +18,8 @@
   },
   "keywords": [],
   "author": "gamejoye",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^6.0.6"
+  }
 }
