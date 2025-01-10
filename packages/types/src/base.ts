@@ -1,10 +1,24 @@
+export enum PriorityTypes {
+  HIGH = 'HIGH',
+  MEDIUM = 'MEDIUM',
+  LOW = 'LOW',
+}
+
+export enum FrequencyTypes {
+  NONE = 'NONE',
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  YEARLY = 'YEARLY',
+}
+
 export type Todo = {
   id: number;
   title: string;
   completed: boolean;
   frequency: FrequencyTypes;
   frequencyOptions?: FrequencyOptions;
-  priority?: 'HIGH' | 'MEDIUM' | 'LOW';
+  priority?: PriorityTypes;
   dueDate: string;
   createAt: string;
 };
@@ -15,7 +29,7 @@ export type Group = {
 };
 
 export const frequencyTypes = ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'] as const;
-export type FrequencyTypes = (typeof frequencyTypes)[number];
+// export type FrequencyTypes = (typeof frequencyTypes)[number];
 
 export type DailyPickerProps = {
   onDaysChange: (val: number) => void;
