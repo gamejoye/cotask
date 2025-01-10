@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Todo } from '@cotask-be/modules/todos';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
   name: 'user',
@@ -22,6 +23,9 @@ export class User {
   @Column({ name: 'created_at' })
   createdAt: string;
 
-  @Column({ name: 'updated_at' })
-  updatedAt: string;
+  @Column({ name: 'updated_at', nullable: true })
+  updatedAt: string | null;
+
+  @OneToMany(() => Todo, todo => todo.createdBy)
+  todos: Todo[];
 }
