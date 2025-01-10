@@ -40,6 +40,9 @@ importers:
 
   packages/cotask-be:
     dependencies:
+      '@cotask/types':
+        specifier: workspace:*
+        version: link:../types
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.4.15(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -196,7 +199,11 @@ importers:
         specifier: ^6.0.6
         version: 6.0.7(@types/node@22.10.5)(jiti@2.4.2)(terser@5.37.0)
 
-  packages/types: {}
+  packages/types:
+    devDependencies:
+      vite:
+        specifier: ^6.0.6
+        version: 6.0.7(@types/node@22.10.5)(jiti@2.4.2)(terser@5.37.0)
 
 packages:
   '@adobe/css-tools@4.4.1':
