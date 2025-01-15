@@ -1,11 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
-const swaggerTitle = 'Cotask Backend Api';
-const documentDescription = 'Cotask: 一款面向团队的协同待办事项工具';
-const documentVersion = 'v0.0.0';
-const documentTag = 'Api/V1';
+import {
+  documentDescription,
+  documentTag,
+  documentVersion,
+  swaggerTitle,
+} from '@cotask-be/common/constans/swagger';
+import { ResTransformInterceptor } from '@cotask-be/common/interceptors';
+import { HttpExceptionFilter } from '@cotask-be/common/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +21,10 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
+
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new ResTransformInterceptor());
+
   await app.listen(8080);
 }
 bootstrap();
