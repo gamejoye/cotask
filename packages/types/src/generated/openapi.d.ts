@@ -194,8 +194,9 @@ export interface components {
       /**
        * @description todo频率
        * @example NONE
+       * @enum {string}
        */
-      frequency: string;
+      frequency: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
       /**
        * @description todo频率选项
        * @example null

@@ -412,6 +412,7 @@
           "frequency": {
             "type": "string",
             "example": "NONE",
+            "enum": ["NONE", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"],
             "description": "todo频率"
           },
           "frequencyOption": {
