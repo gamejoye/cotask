@@ -1,0 +1,577 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "登录成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/LoginVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "用户登录",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "注册成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/UserVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "用户注册",
+        "tags": ["auth"]
+      }
+    },
+    "/todos/{id}": {
+      "get": {
+        "operationId": "TodosController_getTodoById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功todo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/TodoVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "todo不存在"
+          }
+        },
+        "summary": "根据id获取todo",
+        "tags": ["todos"]
+      }
+    },
+    "/todos": {
+      "post": {
+        "operationId": "TodosController_createTodo",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTodoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "成功创建todo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/TodoVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "创建todo",
+        "tags": ["todos"]
+      }
+    },
+    "/groups": {
+      "get": {
+        "operationId": "GroupsController_getGroups",
+        "parameters": [
+          {
+            "name": "_start",
+            "required": true,
+            "in": "query",
+            "description": "paging起始位置",
+            "schema": {
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "_end",
+            "required": true,
+            "in": "query",
+            "description": "paging结束位置（不包括当前）",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "_order",
+            "required": true,
+            "in": "query",
+            "description": "排序方式",
+            "schema": {
+              "example": "ASC",
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": true,
+            "in": "query",
+            "description": "排序所依据的属性",
+            "schema": {
+              "example": "id",
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "query",
+            "description": "用户id",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "分组数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GetGroupsVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "根据user_id分页获取分组",
+        "tags": ["groups"]
+      }
+    }
+  },
+  "info": {
+    "title": "Cotask Backend Api",
+    "description": "Cotask: 一款面向团队的协同待办事项工具",
+    "version": "v0.0.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "Api/V1",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "ApiBaseResult": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "description": "Http状态码",
+            "examples": [200, 201, 404, 403]
+          },
+          "message": {
+            "type": "string",
+            "description": "Http内容的简要概述",
+            "examples": ["用户权限不足", "未找到资源"]
+          }
+        },
+        "required": ["statusCode", "message"]
+      },
+      "UserVo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "用户id",
+            "example": 1
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名",
+            "example": "gamejoye"
+          },
+          "email": {
+            "type": "string",
+            "description": "用户邮箱",
+            "example": "gamejoye@gmail.com"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "description": "用户头像",
+            "example": "https://avatars.githubusercontent.com/u/88575063?v=4"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "创建时间",
+            "example": "2022-01-02 00:00:00"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "更新时间",
+            "example": "2022-01-01 00:00:00"
+          }
+        },
+        "required": ["id", "username", "email", "avatarUrl", "createdAt", "updatedAt"]
+      },
+      "LoginVo": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "description": "用户信息",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserVo"
+              }
+            ]
+          },
+          "token": {
+            "type": "string",
+            "example": "token",
+            "description": "用户token"
+          }
+        },
+        "required": ["user", "token"]
+      },
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "gamejoye@gmail.com",
+            "description": "用户邮箱"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456..",
+            "description": "用户密码"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "RegisterUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "gamejoye",
+            "description": "用户名"
+          },
+          "email": {
+            "type": "string",
+            "example": "gamejoye@gmail.com",
+            "description": "用户邮箱"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456..",
+            "description": "用户密码"
+          },
+          "code": {
+            "type": "string",
+            "example": "123456",
+            "description": "验证码"
+          }
+        },
+        "required": ["username", "email", "password", "code"]
+      },
+      "TodoVo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "todo唯一id"
+          },
+          "title": {
+            "type": "string",
+            "example": "Learn React",
+            "description": "todo标题"
+          },
+          "description": {
+            "type": "string",
+            "example": "一周之内学会如何使用React写一个应用",
+            "description": "todo描述",
+            "nullable": true
+          },
+          "priority": {
+            "type": "string",
+            "example": "HIGH",
+            "enum": ["HIGH", "MEDIUM", "LOW"],
+            "description": "todo优先级",
+            "nullable": true
+          },
+          "frequency": {
+            "type": "string",
+            "example": "NONE",
+            "description": "todo频率"
+          },
+          "frequencyOption": {
+            "type": "object",
+            "example": null,
+            "description": "todo频率选项",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2022-01-03",
+            "description": "todo截止日期"
+          },
+          "completed": {
+            "type": "boolean",
+            "example": false,
+            "description": "todo是否完成"
+          },
+          "createdBy": {
+            "description": "创建者信息",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserVo"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-01-01 00:00:00",
+            "description": "创建时间"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2022-01-02 00:00:00",
+            "description": "更新时间",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "priority",
+          "frequency",
+          "frequencyOption",
+          "dueDate",
+          "completed",
+          "createdBy",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateTodoDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Learn React",
+            "description": "todo标题"
+          },
+          "description": {
+            "type": "string",
+            "example": "一周之内学会如何使用React写一个应用",
+            "description": "todo描述"
+          },
+          "priority": {
+            "type": "string",
+            "example": "HIGH",
+            "enum": ["HIGH", "MEDIUM", "LOW"],
+            "description": "todo优先级"
+          },
+          "frequency": {
+            "type": "string",
+            "example": "NONE",
+            "enum": ["NONE", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"],
+            "description": "todo频率"
+          },
+          "frequencyOption": {
+            "type": "object",
+            "example": null,
+            "description": "todo频率选项"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2023-01-01",
+            "description": "todo截止日期"
+          },
+          "createdBy": {
+            "type": "number",
+            "example": 1,
+            "description": "创建者id"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "priority",
+          "frequency",
+          "frequencyOption",
+          "dueDate",
+          "createdBy"
+        ]
+      },
+      "GroupVo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "分组id"
+          },
+          "name": {
+            "type": "string",
+            "example": "学习",
+            "description": "分组名称"
+          },
+          "description": {
+            "type": "string",
+            "example": "寒假ACM集训",
+            "description": "分组描述"
+          },
+          "createdBy": {
+            "description": "创建人",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserVo"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-01-02 00:00:00",
+            "description": "创建时间"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2022-01-01 00:00:00",
+            "description": "更新时间"
+          }
+        },
+        "required": ["id", "name", "description", "createdBy", "createdAt", "updatedAt"]
+      },
+      "GetGroupsVo": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "example": 1,
+            "description": "分组总条数"
+          },
+          "data": {
+            "description": "分组数据",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupVo"
+            }
+          }
+        },
+        "required": ["total", "data"]
+      }
+    }
+  }
+}
