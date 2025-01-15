@@ -33,6 +33,7 @@ export class TodoVo {
 
   @ApiProperty({
     example: FrequencyTypes.NONE,
+    enum: FrequencyTypes,
     description: 'todo频率',
   })
   frequency: FrequencyTypes;
