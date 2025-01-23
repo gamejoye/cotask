@@ -169,6 +169,32 @@ export interface components {
        */
       code: string;
     };
+    CircleTimeOptions: {
+      /**
+       * @description 循环周期
+       * @example 1
+       */
+      circleTime: number;
+      /**
+       * @description 循环周期内选择的日期，如果循环周期无法选择日期，传递空数组就好
+       * @example [
+       *       1,
+       *       2,
+       *       3
+       *     ]
+       */
+      days: number[];
+    };
+    FrequencyOption: {
+      /**
+       * @description 频率类型（不包括 NONE）
+       * @example DAILY
+       * @enum {string}
+       */
+      type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+      /** @description 循环周期配置 */
+      options: components['schemas']['CircleTimeOptions'];
+    };
     TodoVo: {
       /**
        * @description todo唯一id
@@ -201,7 +227,7 @@ export interface components {
        * @description todo频率选项
        * @example null
        */
-      frequencyOption: Record<string, never> | null;
+      frequencyOption: components['schemas']['FrequencyOption'] | null;
       /**
        * @description todo截止日期
        * @example 2022-01-03
@@ -252,7 +278,7 @@ export interface components {
        * @description todo频率选项
        * @example null
        */
-      frequencyOption: Record<string, never>;
+      frequencyOption: Record<string, never> | null;
       /**
        * @description todo截止日期
        * @example 2023-01-01

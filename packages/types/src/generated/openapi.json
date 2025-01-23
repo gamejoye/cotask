@@ -383,6 +383,45 @@
         },
         "required": ["username", "email", "password", "code"]
       },
+      "CircleTimeOptions": {
+        "type": "object",
+        "properties": {
+          "circleTime": {
+            "type": "number",
+            "example": 1,
+            "description": "循环周期"
+          },
+          "days": {
+            "example": [1, 2, 3],
+            "description": "循环周期内选择的日期，如果循环周期无法选择日期，传递空数组就好",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "required": ["circleTime", "days"]
+      },
+      "FrequencyOption": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "DAILY",
+            "enum": ["DAILY", "WEEKLY", "MONTHLY", "YEARLY"],
+            "description": "频率类型（不包括 NONE）"
+          },
+          "options": {
+            "description": "循环周期配置",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CircleTimeOptions"
+              }
+            ]
+          }
+        },
+        "required": ["type", "options"]
+      },
       "TodoVo": {
         "type": "object",
         "properties": {
@@ -416,10 +455,14 @@
             "description": "todo频率"
           },
           "frequencyOption": {
-            "type": "object",
             "example": null,
             "description": "todo频率选项",
-            "nullable": true
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FrequencyOption"
+              }
+            ]
           },
           "dueDate": {
             "type": "string",
@@ -493,7 +536,8 @@
           "frequencyOption": {
             "type": "object",
             "example": null,
-            "description": "todo频率选项"
+            "description": "todo频率选项",
+            "nullable": true
           },
           "dueDate": {
             "type": "string",
