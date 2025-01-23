@@ -3,7 +3,7 @@ import { useForm } from 'antd/es/form/Form';
 import Modal from 'antd/es/modal/Modal';
 import { useState } from 'react';
 import CotaskDatePicker from '@cotask-fe/shared/components/CotaskDatePicker';
-import { FrequencyOptions, frequencyTypes, Todo } from '@cotask/types';
+import { FrequencyOptions, FrequencyTypes, frequencyTypes, Todo } from '@cotask/types';
 import dayjs from 'dayjs';
 import { useLastState } from '@cotask-fe/shared/hooks';
 
@@ -28,19 +28,20 @@ type FormValues = Pick<Todo, 'title' | 'priority' | 'dueDate' | 'frequency'>;
 export default function TodoForm({ todo, onEdit }: Props) {
   const [form] = useForm<Todo>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [frequencyOptions, setFrequencyOptions] = useState<FrequencyOptions | undefined>(undefined);
-  const [frequency, setFrequency, lastFrequency] =
-    useLastState<(typeof frequencyTypes)[number]>('NONE'); // 用于控制CotaskDatePicker的initialFrequency
+  const [frequencyOption, setFrequencyOption] = useState<FrequencyOptions | undefined>(undefined);
+  const [frequency, setFrequency, lastFrequency] = useLastState<FrequencyTypes>(
+    FrequencyTypes.NONE
+  ); // 用于控制CotaskDatePicker的initialFrequency
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
   const handleOk = (options: FrequencyOptions | undefined) => {
-    // 表单里的frequency需要同步frequencyOptions.type
+    // 表单里的frequency需要同步frequencyOption.type
     // 因为表单frequency是非受控
     form.setFieldValue('frequency', options?.type ?? 'NONE');
-    setFrequencyOptions(options);
+    setFrequencyOption(options);
     setIsModalOpen(false);
   };
 
@@ -55,7 +56,7 @@ export default function TodoForm({ todo, onEdit }: Props) {
     onEdit({
       ...todo,
       ...values,
-      frequencyOptions,
+      frequencyOption: frequencyOption ?? null,
     });
   };
 
@@ -103,7 +104,7 @@ export default function TodoForm({ todo, onEdit }: Props) {
         <Form.Item<FormValues>
           label='重复'
           name='frequency'
-          extra={frequencyOptions && getFrequencyOptionsHintText(frequencyOptions)}
+          extra={frequencyOption && getFrequencyOptionHintText(frequencyOption)}
         >
           <Select
             options={frequencyTypes.map(f => ({ value: f, label: f }))}
@@ -133,24 +134,19 @@ export default function TodoForm({ todo, onEdit }: Props) {
   );
 }
 
-const getFrequencyOptionsHintText = (frequencyOptions: FrequencyOptions) => {
-  if (frequencyOptions.type === 'DAILY') {
-    return `每${frequencyOptions.options === 1 ? '' : frequencyOptions.options}天`;
-  } else if (frequencyOptions.type === 'WEEKLY') {
-    const days = frequencyOptions.options.selectDays.sort();
-    return `每${
-      frequencyOptions.options.weeks === 1 ? '' : frequencyOptions.options.weeks
-    }周${days.length ? `的(${days.join(',')})` : ''}`;
-  } else if (frequencyOptions.type === 'MONTHLY') {
-    const days = frequencyOptions.options.selectDays.sort();
-    return `每${
-      frequencyOptions.options.months === 1 ? '' : frequencyOptions.options.months
-    }月${days.length ? `的(${days.join(',')})` : ''}`;
-  } else if (frequencyOptions.type === 'YEARLY') {
-    const months = frequencyOptions.options.selectMonths.sort();
-    return `每${
-      frequencyOptions.options.years === 1 ? '' : frequencyOptions.options.years
-    }年${months.length ? `的(${months.join(',')})` : ''}`;
+const getFrequencyOptionHintText = (frequencyOption: FrequencyOptions) => {
+  if (!frequencyOption) return '';
+  const { type, options } = frequencyOption;
+  const days = options.days.toSorted();
+  const circleTime = options.circleTime;
+  if (type === 'DAILY') {
+    return `每${circleTime === 1 ? '' : circleTime}天`;
+  } else if (type === 'WEEKLY') {
+    return `每${circleTime === 1 ? '' : circleTime}周${days.length ? `的(${days.join(',')})` : ''}`;
+  } else if (frequencyOption.type === 'MONTHLY') {
+    return `每${circleTime === 1 ? '' : circleTime}月${days.length ? `的(${days.join(',')})` : ''}`;
+  } else if (type === 'YEARLY') {
+    return `每${circleTime === 1 ? '' : circleTime}年${days.length ? `的(${days.join(',')})` : ''}`;
   }
   return '';
 };

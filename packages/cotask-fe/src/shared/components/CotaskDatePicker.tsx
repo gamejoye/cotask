@@ -3,14 +3,7 @@ import { Button, Checkbox, InputNumber, InputNumberProps, Radio, Space, Typograp
 import { useEffect, useState } from 'react';
 import CustomCheckboxGrid from './CustomCheckbox';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import {
-  frequencyTypes,
-  FrequencyOptions,
-  DailyPickerProps,
-  WeeklyPickerProps,
-  MonthlyPickerProps,
-  YearlyPickerProps,
-} from '@cotask/types';
+import { frequencyTypes, FrequencyOptions } from '@cotask/types';
 
 export type Props = {
   initialFrequency?: (typeof frequencyTypes)[number];
@@ -35,18 +28,38 @@ export default function CotaskDatePicker({
   let component = null;
   switch (isControlled ? frequency : interalVal) {
     case 'DAILY':
-      component = <DailyPicker onDaysChange={val => setVals({ type: 'DAILY', options: val })} />;
+      component = (
+        <DailyPicker
+          onDaysChange={val => setVals({ type: 'DAILY', options: { circleTime: val, days: [] } })}
+        />
+      );
       break;
     case 'WEEKLY':
-      component = <WeeklyPicker onWeeksChange={val => setVals({ type: 'WEEKLY', options: val })} />;
+      component = (
+        <WeeklyPicker
+          onWeeksChange={val =>
+            setVals({ type: 'WEEKLY', options: { circleTime: val.weeks, days: val.selectDays } })
+          }
+        />
+      );
       break;
     case 'MONTHLY':
       component = (
-        <MonthlyPicker onMonthsChange={val => setVals({ type: 'MONTHLY', options: val })} />
+        <MonthlyPicker
+          onMonthsChange={val =>
+            setVals({ type: 'MONTHLY', options: { circleTime: val.months, days: val.selectDays } })
+          }
+        />
       );
       break;
     case 'YEARLY':
-      component = <YearlyPicker onYearsChange={val => setVals({ type: 'YEARLY', options: val })} />;
+      component = (
+        <YearlyPicker
+          onYearsChange={val =>
+            setVals({ type: 'YEARLY', options: { circleTime: val.years, days: val.selectMonths } })
+          }
+        />
+      );
       break;
   }
   return (
@@ -92,6 +105,10 @@ export default function CotaskDatePicker({
   );
 }
 
+type DailyPickerProps = {
+  onDaysChange: (val: number) => void;
+};
+
 function DailyPicker({ onDaysChange }: DailyPickerProps) {
   const handleChange: InputNumberProps['onChange'] = value => {
     onDaysChange(value !== null ? Number(value) : 1);
@@ -117,6 +134,10 @@ const weeklyOptions = [
   { label: '六', value: 6 },
   { label: '日', value: 7 },
 ];
+
+type WeeklyPickerProps = {
+  onWeeksChange: (val: { weeks: number; selectDays: number[] }) => void;
+};
 
 function WeeklyPicker({ onWeeksChange }: WeeklyPickerProps) {
   const [weeks, setWeeks] = useState(1);
@@ -162,6 +183,10 @@ const monthlyOptions = Array.from({ length: 31 }, (_, i) => ({
   label: i + 1 + '',
 }));
 
+type MonthlyPickerProps = {
+  onMonthsChange: (val: { months: number; selectDays: number[] }) => void;
+};
+
 function MonthlyPicker({ onMonthsChange }: MonthlyPickerProps) {
   const [months, setMonths] = useState(1);
   const [selectDays, setSelectDays] = useState<number[]>([]);
@@ -204,6 +229,10 @@ const yearlyOptions = Array.from({ length: 12 }, (_, i) => ({
   value: i + 1 + '',
   label: i + 1 + '月',
 }));
+
+type YearlyPickerProps = {
+  onYearsChange: (val: { years: number; selectMonths: number[] }) => void;
+};
 
 function YearlyPicker({ onYearsChange }: YearlyPickerProps) {
   const [years, setYears] = useState(1);

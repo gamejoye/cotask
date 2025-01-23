@@ -3,6 +3,42 @@ import { Todo } from '../entities/todo.entity';
 import { FrequencyTypes, PriorityTypes } from '@cotask/types';
 import { ApiProperty } from '@nestjs/swagger';
 
+export class CircleTimeOptions {
+  @ApiProperty({
+    example: 1,
+    description: '循环周期',
+  })
+  circleTime: number;
+
+  @ApiProperty({
+    example: [1, 2, 3],
+    description: '循环周期内选择的日期，如果循环周期无法选择日期，传递空数组就好',
+    type: 'integer',
+    isArray: true,
+  })
+  days: number[];
+}
+
+export class FrequencyOption {
+  @ApiProperty({
+    example: FrequencyTypes.DAILY,
+    enum: [
+      FrequencyTypes.DAILY,
+      FrequencyTypes.WEEKLY,
+      FrequencyTypes.MONTHLY,
+      FrequencyTypes.YEARLY,
+    ],
+    description: '频率类型（不包括 NONE）',
+  })
+  type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+
+  @ApiProperty({
+    description: '循环周期配置',
+    type: CircleTimeOptions,
+  })
+  options: CircleTimeOptions;
+}
+
 export class TodoVo {
   @ApiProperty({
     example: 1,
@@ -41,9 +77,10 @@ export class TodoVo {
   @ApiProperty({
     example: null,
     description: 'todo频率选项',
+    type: FrequencyOption,
     nullable: true,
   })
-  frequencyOption: Record<string, any> | null;
+  frequencyOption: FrequencyOption | null;
 
   @ApiProperty({
     example: '2022-01-03',

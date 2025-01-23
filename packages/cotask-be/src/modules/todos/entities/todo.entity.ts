@@ -29,9 +29,14 @@ export class Todo {
   })
   frequency: FrequencyTypes;
 
-  // TODO 类型完备
   @Column({ name: 'frequency_option', type: 'json', nullable: true })
-  frequencyOption: Record<string, any> | null;
+  frequencyOption: {
+    type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+    options: {
+      circleTime: number;
+      days: number[];
+    };
+  } | null;
 
   @Column({ name: 'due_date' })
   dueDate: string;

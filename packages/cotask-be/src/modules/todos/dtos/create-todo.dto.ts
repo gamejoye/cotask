@@ -37,6 +37,7 @@ export class CreateTodoDto {
   @ApiProperty({
     example: null,
     description: 'todo频率选项',
+    nullable: true,
   })
   @IsOptional()
   @IsObject()
