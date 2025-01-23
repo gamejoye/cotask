@@ -29,7 +29,6 @@ export class UsersService extends IUsersService {
     if (user) {
       throw new BadRequestException('Email is already registered');
     }
-    // TODO password hash
     const passwordHash = await bcrypt.hash(password, 10);
     const partial = this.userRepository.create({
       username,
