@@ -27,8 +27,8 @@
     "@storybook/react": "^8.4.7",
     "@storybook/react-vite": "^8.4.7",
     "@storybook/test": "^8.4.7",
-    "@types/react": "^19.0.2",
-    "@types/react-dom": "^19.0.2",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "prop-types": "^15.8.1",
     "storybook": "^8.4.7",
@@ -37,11 +37,14 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
     "@ant-design/pro-components": "^2.8.2",
+    "@cotask/types": "workspace:*",
     "antd": "^5.22.7",
     "dayjs": "^1.11.13",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-infinite-scroll-component": "^6.1.0",
-    "@cotask/types": "workspace:*"
+    "react-router": "^6.21.0",
+    "react-router-dom": "^6.21.0",
+    "zustand": "^5.0.3"
   }
 }
