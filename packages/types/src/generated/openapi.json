@@ -202,6 +202,7 @@
             "description": "排序方式",
             "schema": {
               "example": "ASC",
+              "enum": ["ASC", "DESC"],
               "type": "string"
             }
           },
@@ -537,7 +538,30 @@
             "type": "object",
             "example": null,
             "description": "todo频率选项",
-            "nullable": true
+            "nullable": true,
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["DAILY", "WEEKLY", "MONTHLY", "YEARLY"],
+                "description": "频率类型"
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "circleTime": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "days": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [1, 3, 5]
+                  }
+                }
+              }
+            }
           },
           "dueDate": {
             "type": "string",

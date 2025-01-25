@@ -278,7 +278,23 @@ export interface components {
        * @description todo频率选项
        * @example null
        */
-      frequencyOption: Record<string, never> | null;
+      frequencyOption: {
+        /**
+         * @description 频率类型
+         * @enum {string}
+         */
+        type?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+        options?: {
+          /** @example 1 */
+          circleTime?: number;
+          /** @example [
+           *       1,
+           *       3,
+           *       5
+           *     ] */
+          days?: number[];
+        };
+      } | null;
       /**
        * @description todo截止日期
        * @example 2023-01-01
@@ -454,7 +470,7 @@ export interface operations {
         /** @description paging结束位置（不包括当前） */
         _end: number;
         /** @description 排序方式 */
-        _order: string;
+        _order: 'ASC' | 'DESC';
         /** @description 排序所依据的属性 */
         _sort: string;
         /** @description 用户id */
