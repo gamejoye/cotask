@@ -16,6 +16,7 @@ export enum FrequencyTypes {
 
 export type Todo = components['schemas']['TodoVo'];
 export type Group = components['schemas']['GroupVo'];
+export type User = components['schemas']['UserVo'];
 
 export const frequencyTypes = [
   FrequencyTypes.NONE,
