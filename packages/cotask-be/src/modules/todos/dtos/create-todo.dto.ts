@@ -38,10 +38,39 @@ export class CreateTodoDto {
     example: null,
     description: 'todo频率选项',
     nullable: true,
+    type: 'object',
+    properties: {
+      type: {
+        type: 'string',
+        enum: ['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'],
+        description: '频率类型',
+      },
+      options: {
+        type: 'object',
+        properties: {
+          circleTime: {
+            type: 'number',
+            example: 1,
+          },
+          days: {
+            type: 'array',
+            items: {
+              type: 'number',
+            },
+            example: [1, 3, 5],
+          },
+        },
+      },
+    },
   })
-  @IsOptional()
   @IsObject()
-  frequencyOption: Record<string, any> | null;
+  frequencyOption: {
+    type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+    options: {
+      circleTime: number;
+      days: number[];
+    };
+  } | null;
 
   @ApiProperty({
     example: '2023-01-01',
