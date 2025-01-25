@@ -3,6 +3,7 @@ import useAuthStore from '../store';
 
 // 管理认证信息、用户信息
 export function useAuth() {
+  const user = useAuthStore(state => state.user);
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
   const storeLogin = useAuthStore(state => state.login);
   const storeLogout = useAuthStore(state => state.logout);
@@ -11,7 +12,8 @@ export function useAuth() {
     try {
       const res = await loginApi(body);
       if (res && res.data && (res.statusCode + '').startsWith('2')) {
-        storeLogin();
+        const { user } = res.data;
+        storeLogin(user);
         return true;
       }
       throw new Error();
@@ -21,8 +23,17 @@ export function useAuth() {
       return false;
     }
   };
+  const logout = async () => {
+    try {
+      // TODO logout endpoint
+    } finally {
+      storeLogout();
+    }
+  };
   return {
+    user,
     isAuthenticated,
     login,
+    logout,
   };
 }
