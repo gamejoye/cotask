@@ -38,6 +38,7 @@
     "@ant-design/icons": "^5.5.2",
     "@ant-design/pro-components": "^2.8.2",
     "@cotask/types": "workspace:*",
+    "ahooks": "^3.8.4",
     "antd": "^5.22.7",
     "dayjs": "^1.11.13",
     "react": "^18.3.1",
