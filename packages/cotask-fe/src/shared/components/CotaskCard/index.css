@@ -1,0 +1,52 @@
+.nav-card {
+  background: var(--ant-component-background);
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-card h3 {
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.nav-card p {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.nav-card:hover {
+  background: var(--hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--active-bg);
+}
+
+.nav-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom,
+      var(--active-color),
+      rgba(var(--active-color-rgb), 0.6));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.nav-card.active {
+  background: var(--active-bg);
+  border-color: var(--active-color);
+}
+
+.nav-card.active::before {
+  opacity: 1;
+}
