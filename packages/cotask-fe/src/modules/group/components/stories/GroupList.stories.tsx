@@ -10,6 +10,11 @@ const meta: Meta<typeof GroupList> = {
   parameters: {
     layout: 'centered',
   },
+  render: args => (
+    <div style={{ width: 300 }}>
+      <GroupList {...args} />
+    </div>
+  ),
   tags: ['autodocs'],
 };
 

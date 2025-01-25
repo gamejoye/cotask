@@ -14,7 +14,7 @@ export type Props = {
 export default function GroupList({ groups, loading, error, onClick, retry }: Props) {
   if (error) {
     return (
-      <div style={{ width: 300 }}>
+      <div style={{ width: '100%' }}>
         <Result
           status='error'
           title='获取团队列表失败'
@@ -31,7 +31,7 @@ export default function GroupList({ groups, loading, error, onClick, retry }: Pr
   return (
     <List
       dataSource={groups}
-      style={{ width: 300 }}
+      style={{ width: '100%' }}
       loading={loading}
       locale={{
         emptyText: '团队列表为空',
