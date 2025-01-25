@@ -24,6 +24,7 @@ export class BasePaging {
   @ApiProperty({
     example: 'ASC',
     description: '排序方式',
+    enum: ['ASC', 'DESC'],
   })
   _order: 'ASC' | 'DESC' = 'ASC';
 
