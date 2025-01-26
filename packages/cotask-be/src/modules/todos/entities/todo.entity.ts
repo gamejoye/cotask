@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { FrequencyTypes, PriorityTypes } from '@cotask/types';
 import { User } from '@cotask-be/modules/users';
+import { Group } from '@cotask-be/modules/groups';
 
 @Entity({
   name: 'todo',
@@ -43,6 +44,10 @@ export class Todo {
 
   @Column({ default: false })
   completed: boolean;
+
+  @ManyToOne(() => Group, group => group.todos, { nullable: false })
+  @JoinColumn({ name: 'group_id' })
+  group: Group;
 
   @ManyToOne(() => User, user => user.todos, { nullable: false })
   @JoinColumn({ name: 'created_by' })

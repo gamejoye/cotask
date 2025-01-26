@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { ITodosService } from '../services/todos.abstract';
 import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
@@ -8,6 +8,7 @@ import {
 } from '@cotask-be/common/types';
 import { TodoVo } from '../vos/todo.vo';
 import { CreateTodoDto } from '../dtos/create-todo.dto';
+import { GetTodosDto } from '../dtos/get-todos.dto';
 
 @ApiExtraModels(ApiBaseResult)
 @ApiTags('todos')
@@ -25,6 +26,19 @@ export class TodosController {
   async getTodoById(@Param('id', ParseIntPipe) id: number): Promise<TodoVo> {
     const todo = await this.todosService.getById(id);
     return new TodoVo(todo);
+  }
+
+  @Get()
+  @ApiOperation({ summary: '根据groupId获取todo' })
+  @ApiOkResponseResult({
+    model: TodoVo,
+    isArray: true,
+    description: '成功todo列表',
+  })
+  @ApiResponse({ status: 404, description: 'group不存在' })
+  async getTodosByGroupId(@Query() query: GetTodosDto): Promise<TodoVo[]> {
+    const todos = await this.todosService.getTodosByGroupId(query, query.group_id);
+    return todos.map(todo => new TodoVo(todo));
   }
 
   @Post('')
