@@ -198,10 +198,7 @@
                     {
                       "properties": {
                         "data": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/TodoVo"
-                          }
+                          "$ref": "#/components/schemas/GetTodosVo"
                         }
                       },
                       "required": ["data"]
@@ -596,6 +593,24 @@
           "createdAt",
           "updatedAt"
         ]
+      },
+      "GetTodosVo": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "example": 1,
+            "description": "待办事项总条数"
+          },
+          "data": {
+            "description": "待办事项数据",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TodoVo"
+            }
+          }
+        },
+        "required": ["total", "data"]
       },
       "CreateTodoDto": {
         "type": "object",

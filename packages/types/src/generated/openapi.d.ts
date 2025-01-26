@@ -252,6 +252,15 @@ export interface components {
        */
       updatedAt: string | null;
     };
+    GetTodosVo: {
+      /**
+       * @description 待办事项总条数
+       * @example 1
+       */
+      total: number;
+      /** @description 待办事项数据 */
+      data: components['schemas']['TodoVo'][];
+    };
     CreateTodoDto: {
       /**
        * @description todo标题
@@ -464,7 +473,7 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiBaseResult'] & {
-            data: components['schemas']['TodoVo'][];
+            data: components['schemas']['GetTodosVo'];
           };
         };
       };
