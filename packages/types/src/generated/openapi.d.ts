@@ -57,7 +57,8 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /** 根据groupId获取todo */
+    get: operations['TodosController_getTodosByGroupId'];
     put?: never;
     /** 创建todo */
     post: operations['TodosController_createTodo'];
@@ -428,6 +429,46 @@ export interface operations {
         };
       };
       /** @description todo不存在 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  TodosController_getTodosByGroupId: {
+    parameters: {
+      query: {
+        /** @description paging起始位置 */
+        _start: number;
+        /** @description paging结束位置（不包括当前） */
+        _end: number;
+        /** @description 排序方式 */
+        _order: 'ASC' | 'DESC';
+        /** @description 排序所依据的属性 */
+        _sort: string;
+        /** @description 群组id */
+        group_id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 成功todo列表 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: components['schemas']['TodoVo'][];
+          };
+        };
+      };
+      /** @description group不存在 */
       404: {
         headers: {
           [name: string]: unknown;

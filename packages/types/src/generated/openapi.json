@@ -130,6 +130,94 @@
       }
     },
     "/todos": {
+      "get": {
+        "operationId": "TodosController_getTodosByGroupId",
+        "parameters": [
+          {
+            "name": "_start",
+            "required": true,
+            "in": "query",
+            "description": "paging起始位置",
+            "schema": {
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "_end",
+            "required": true,
+            "in": "query",
+            "description": "paging结束位置（不包括当前）",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "_order",
+            "required": true,
+            "in": "query",
+            "description": "排序方式",
+            "schema": {
+              "example": "ASC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": true,
+            "in": "query",
+            "description": "排序所依据的属性",
+            "schema": {
+              "example": "id",
+              "type": "string"
+            }
+          },
+          {
+            "name": "group_id",
+            "required": true,
+            "in": "query",
+            "description": "群组id",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功todo列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/TodoVo"
+                          }
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "group不存在"
+          }
+        },
+        "summary": "根据groupId获取todo",
+        "tags": ["todos"]
+      },
       "post": {
         "operationId": "TodosController_createTodo",
         "parameters": [],
