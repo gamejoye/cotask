@@ -41,7 +41,7 @@ export default function TodoList({
           title: '',
           completed: false,
           dueDate: '',
-          createAt: '',
+          createdAt: '',
           frequency: FrequencyTypes.NONE,
         },
       });
@@ -77,7 +77,7 @@ export default function TodoList({
   return (
     <List
       dataSource={dataSource}
-      style={{ minWidth: 300 }}
+      style={{ width: '100%' }}
       locale={{
         emptyText: '已完成所有待办事项',
       }}

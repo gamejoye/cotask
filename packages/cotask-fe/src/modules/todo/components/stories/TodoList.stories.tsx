@@ -10,6 +10,11 @@ const meta: Meta<typeof TodoList> = {
   parameters: {
     layout: 'centered',
   },
+  render: args => (
+    <div style={{ width: 300 }}>
+      <TodoList {...args} />
+    </div>
+  ),
   tags: ['autodocs'],
 };
 export default meta;

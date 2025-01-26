@@ -72,26 +72,26 @@ export default function TodoItem({
       <>
         <div
           style={{
+            boxSizing: 'border-box',
             border: '1px solid #d9d9d9',
             borderRadius: '4px',
             padding: '12px 16px',
-            transition: 'border 0.2s ease-in-out',
-            minWidth: 300,
+            width: '100%',
+            marginTop: '20px',
           }}
         >
           <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
-            <Space style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+            <div style={{ display: 'flex', width: '100%' }}>
               <TodoRadio isNew={true} />
-              <div style={{ flex: 1 }}>
-                <Input
-                  value={newTodo.title}
-                  onChange={e => onTitleChange(e.target.value)}
-                  variant='borderless'
-                  ref={editRef}
-                  suffix={<MenuOutlined onClick={showModal} />}
-                />
-              </div>
-            </Space>
+              <Input
+                value={newTodo.title}
+                onChange={e => onTitleChange(e.target.value)}
+                variant='borderless'
+                style={{ paddingLeft: 0 }}
+                ref={editRef}
+                suffix={<MenuOutlined onClick={showModal} />}
+              />
+            </div>
             <Space style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
               <Tooltip
                 color='cyan'
@@ -141,13 +141,13 @@ export default function TodoItem({
       onDelete={() => onDelete(todo)}
       onEdit={() => onEdit(todo)}
     >
-      <Space style={{ display: 'flex', width: '100%', alignItems: 'center', minWidth: 300 }}>
+      <div style={{ display: 'flex', width: '100%' }}>
         <TodoRadio isNew={false} onClick={() => onComplete(todo)} />
         <div style={{ flex: 1 }} onDoubleClick={onDoubleClick}>
           <Typography.Text delete={todo.completed}>{todo.title}</Typography.Text>
           <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {'2024/12/17'}</div>
         </div>
-      </Space>
+      </div>
     </TodoItemRightClickMenu>
   );
 }
@@ -165,7 +165,9 @@ function TodoRadio({ isNew, onClick }: { isNew: boolean; onClick?: () => void })
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        margin: '4px',
         marginRight: '16px',
+        flexShrink: 0,
       }}
     />
   );
@@ -235,6 +237,7 @@ function TodoItemRightClickMenu({ children, onDelete, onComplete, onEdit }: Righ
           padding: '12px 16px',
           transition: 'border 0.2s ease-in-out',
           boxShadow: isOpen ? '0 0 8px rgba(24, 144, 255, 0.5)' : 'none',
+          marginTop: '10px',
         }}
       >
         {children}
