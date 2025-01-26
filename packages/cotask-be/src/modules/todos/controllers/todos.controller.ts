@@ -9,6 +9,7 @@ import {
 import { TodoVo } from '../vos/todo.vo';
 import { CreateTodoDto } from '../dtos/create-todo.dto';
 import { GetTodosDto } from '../dtos/get-todos.dto';
+import { GetTodosVo } from '../vos/get-todos.vo';
 
 @ApiExtraModels(ApiBaseResult)
 @ApiTags('todos')
@@ -31,14 +32,16 @@ export class TodosController {
   @Get()
   @ApiOperation({ summary: '根据groupId获取todo' })
   @ApiOkResponseResult({
-    model: TodoVo,
-    isArray: true,
+    model: GetTodosVo,
     description: '成功todo列表',
   })
   @ApiResponse({ status: 404, description: 'group不存在' })
-  async getTodosByGroupId(@Query() query: GetTodosDto): Promise<TodoVo[]> {
+  async getTodosByGroupId(@Query() query: GetTodosDto): Promise<GetTodosVo> {
     const todos = await this.todosService.getTodosByGroupId(query, query.group_id);
-    return todos.map(todo => new TodoVo(todo));
+    return {
+      total: 0,
+      data: todos.map(todo => new TodoVo(todo)),
+    };
   }
 
   @Post('')
