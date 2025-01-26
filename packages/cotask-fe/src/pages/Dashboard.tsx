@@ -1,12 +1,18 @@
 import GroupList from '@cotask-fe/modules/group/components/GroupList';
 import { useGroup } from '@cotask-fe/modules/group/hooks';
+import TodoList from '@cotask-fe/modules/todo/components/TodoList';
+import { useTodo } from '@cotask-fe/modules/todo/hooks';
 import CotaskCard from '@cotask-fe/shared/components/CotaskCard';
+import { Group } from '@cotask/types';
 import { Divider, Layout, theme } from 'antd';
+import { useState } from 'react';
 
 const { Sider, Header, Content } = Layout;
 
 export default function Dashboard() {
-  const { groups, loading, error } = useGroup();
+  const { groups, loading: groupsLoading, error: groupsError } = useGroup();
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const { todos } = useTodo(selectedGroup);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -32,10 +38,10 @@ export default function Dashboard() {
         <Divider />
         <GroupList
           groups={groups}
-          loading={loading}
-          error={error}
+          loading={groupsLoading}
+          error={groupsError}
           onClick={group => {
-            console.log('click', group);
+            setSelectedGroup(group);
           }}
           hasMore={false}
           loadMore={() => {
@@ -49,12 +55,21 @@ export default function Dashboard() {
         </Header>
         <Content
           style={{
-            margin: '24px 16px',
+            margin: '0px 16px',
             padding: 24,
-            minHeight: 280,
           }}
         >
-          Content
+          {selectedGroup ? (
+            <TodoList
+              todos={todos}
+              group={selectedGroup}
+              onDelete={() => {}}
+              onComplete={() => {}}
+              onEdit={() => {}}
+              loadMore={() => {}}
+              hasMore={false}
+            />
+          ) : null}
         </Content>
       </Layout>
     </Layout>
