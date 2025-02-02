@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import GroupList from '@cotask-fe/modules/group/components/GroupList';
 import { useGroup } from '@cotask-fe/modules/group/hooks';
 import TodoList from '@cotask-fe/modules/todo/components/TodoList';
-import { useTodo } from '@cotask-fe/modules/todo/hooks';
+import { useTodo, useTypedTodos } from '@cotask-fe/modules/todo/hooks';
 import CotaskCard from '@cotask-fe/shared/components/CotaskCard';
 import CotaskLogo from '@cotask-fe/shared/components/CotaskLogo';
 import { Group } from '@cotask/types';
@@ -22,7 +22,10 @@ const siderStyle: React.CSSProperties = {
 export default function Dashboard() {
   const { groups, loading: groupsLoading, error: groupsError } = useGroup();
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [selectedType, setSelectedType] = useState<'today' | 'all' | null>('today');
+  const { todos: typedTodos } = useTypedTodos(selectedType);
   const { todos } = useTodo(selectedGroup);
+  const showTodos = selectedType === null ? todos : typedTodos;
   const {
     token: { colorBgContainer, colorFillContent },
   } = theme.useToken();
@@ -59,10 +62,27 @@ export default function Dashboard() {
               style={{
                 display: 'grid',
                 gap: '12px',
+                padding: '8px',
               }}
             >
-              <CotaskCard title='我的' content='3项待完成' active onClick={() => {}} />
-              <CotaskCard title='全部' content='12项待完成' onClick={() => {}} />
+              <CotaskCard
+                title='我的'
+                content='3项待完成'
+                active={selectedType === 'today'}
+                onClick={() => {
+                  setSelectedType('today');
+                  setSelectedGroup(null);
+                }}
+              />
+              <CotaskCard
+                title='全部'
+                content='12项待完成'
+                active={selectedType === 'all'}
+                onClick={() => {
+                  setSelectedType('all');
+                  setSelectedGroup(null);
+                }}
+              />
             </div>
             <GroupList
               groups={groups}
@@ -70,6 +90,7 @@ export default function Dashboard() {
               error={groupsError}
               onClick={group => {
                 setSelectedGroup(group);
+                setSelectedType(null);
               }}
               hasMore={false}
               loadMore={() => {
@@ -113,17 +134,21 @@ export default function Dashboard() {
             scrollbarWidth: 'none',
           }}
         >
-          {selectedGroup ? (
-            <TodoList
-              todos={todos}
-              group={selectedGroup}
-              onDelete={() => {}}
-              onComplete={() => {}}
-              onEdit={() => {}}
-              loadMore={() => {}}
-              hasMore={false}
-            />
-          ) : null}
+          <TodoList
+            todos={showTodos}
+            title={
+              selectedGroup !== null
+                ? selectedGroup.name
+                : selectedType === 'today'
+                  ? '今日'
+                  : '全部'
+            }
+            onDelete={() => {}}
+            onComplete={() => {}}
+            onEdit={() => {}}
+            loadMore={() => {}}
+            hasMore={false}
+          />
         </Content>
       </Layout>
     </Layout>
