@@ -145,7 +145,7 @@ export default function TodoItem({
         <TodoRadio isNew={false} onClick={() => onComplete(todo)} />
         <div style={{ flex: 1 }} onDoubleClick={onDoubleClick}>
           <Typography.Text delete={todo.completed}>{todo.title}</Typography.Text>
-          <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {'2024/12/17'}</div>
+          <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {todo.dueDate}</div>
         </div>
       </div>
     </TodoItemRightClickMenu>
