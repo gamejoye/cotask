@@ -10,5 +10,11 @@ export abstract class ITodosService {
   ): Promise<Todo>;
   abstract delete(id: number): Promise<void>;
   abstract getById(id: number): Promise<Todo>;
+  abstract update(
+    todo: Partial<Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'group'>> &
+      Pick<Todo, 'id'>
+  ): Promise<Todo>;
   abstract getTodosByGroupId(paging: BasePaging, groupId: number): Promise<Todo[]>;
+  abstract getTodosByToday(paging: BasePaging, userId: number): Promise<Todo[]>;
+  abstract getTodosByUserId(paging: BasePaging, userId: number): Promise<Todo[]>;
 }
