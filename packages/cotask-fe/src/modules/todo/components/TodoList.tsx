@@ -87,16 +87,17 @@ export default function TodoList({
             {group.name}
           </Typography.Title>
           <Button
-            type='dashed'
             icon={<PlusOutlined />}
             onClick={handleNewTodo}
-            size='middle'
+            size='large'
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
-          />
+          >
+            新建任务
+          </Button>
         </Flex>
       }
       renderItem={({ type, todo }) => (
