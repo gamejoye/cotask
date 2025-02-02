@@ -57,10 +57,7 @@ export const Default: Story = {
         createAt: '2023-01-01',
       },
     ],
-    group: {
-      id: 1,
-      name: '今天',
-    },
+    title: '全部任务',
     onDelete: fn(),
     onComplete: fn(),
     onEdit: fn(),
@@ -73,10 +70,7 @@ export const Default: Story = {
 export const EmptyList: Story = {
   args: {
     todos: [],
-    group: {
-      id: 1,
-      name: '待办事项',
-    },
+    title: '今日任务',
     onDelete: fn(),
     onComplete: fn(),
     onEdit: fn(),

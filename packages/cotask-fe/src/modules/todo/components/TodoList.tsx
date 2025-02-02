@@ -2,11 +2,11 @@ import { List, Typography, Button, Flex } from 'antd';
 import { useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import TodoItem from './TodoItem';
-import { FrequencyTypes, Group, Todo } from '@cotask/types';
+import { FrequencyTypes, Todo } from '@cotask/types';
 
 export type Props = {
+  title: string;
   todos: Todo[];
-  group: Group;
   onDelete: (todo: Todo) => void;
   onComplete: (todo: Todo) => void;
   onEdit: (todo: Todo) => void;
@@ -19,7 +19,7 @@ type DataSource = { type: 'edit' | 'show'; todo: Todo }[];
 
 export default function TodoList({
   todos,
-  group,
+  title,
   onDelete,
   onComplete,
   onEdit,
@@ -84,7 +84,7 @@ export default function TodoList({
       header={
         <Flex justify='space-between'>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {group.name}
+            {title}
           </Typography.Title>
           <Button
             icon={<PlusOutlined />}
