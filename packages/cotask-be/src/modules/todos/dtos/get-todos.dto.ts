@@ -12,3 +12,15 @@ export class GetTodosDto extends BasePaging {
   })
   group_id: number;
 }
+
+export class GetAllTodosDto extends BasePaging {
+  @IsInt()
+  @Type(() => Number)
+  @ApiProperty({
+    example: 1,
+    description: '用户id',
+  })
+  user_id: number;
+}
+
+export class GetTodayTodosDto extends GetAllTodosDto {}
