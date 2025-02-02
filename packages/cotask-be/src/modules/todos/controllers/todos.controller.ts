@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { ITodosService } from '../services/todos.abstract';
 import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
@@ -8,14 +8,40 @@ import {
 } from '@cotask-be/common/types';
 import { TodoVo } from '../vos/todo.vo';
 import { CreateTodoDto } from '../dtos/create-todo.dto';
-import { GetTodosDto } from '../dtos/get-todos.dto';
+import { GetAllTodosDto, GetTodayTodosDto, GetTodosDto } from '../dtos/get-todos.dto';
 import { GetTodosVo } from '../vos/get-todos.vo';
+import { UpdateTodoDto } from '../dtos/update-todo.dto';
 
 @ApiExtraModels(ApiBaseResult)
 @ApiTags('todos')
 @Controller('todos')
 export class TodosController {
   constructor(protected readonly todosService: ITodosService) {}
+
+  @Get('today')
+  @ApiOperation({ summary: '获取今日todo' })
+  @ApiOkResponseResult({
+    model: GetTodosVo,
+    description: '成功todo列表',
+  })
+  async getTodosByToday(@Query() query: GetTodayTodosDto): Promise<GetTodosVo> {
+    /**
+     * TODO 未来可能会考虑时区问题
+     */
+    const todos = await this.todosService.getTodosByToday(query, query.user_id);
+    return { total: 0, data: todos.map(todo => new TodoVo(todo)) };
+  }
+
+  @Get('all')
+  @ApiOperation({ summary: '获取所有todo' })
+  @ApiOkResponseResult({
+    model: GetTodosVo,
+    description: '成功todo列表',
+  })
+  async getAllTodos(@Query() query: GetAllTodosDto): Promise<GetTodosVo> {
+    const todos = await this.todosService.getTodosByUserId(query, query.user_id);
+    return { total: 0, data: todos.map(todo => new TodoVo(todo)) };
+  }
 
   @Get(':id')
   @ApiOperation({ summary: '根据id获取todo' })
@@ -52,6 +78,20 @@ export class TodosController {
   })
   async createTodo(@Body() dto: CreateTodoDto): Promise<TodoVo> {
     const todo = await this.todosService.create(dto, dto.createdBy);
+    return new TodoVo(todo);
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: '更新todo' })
+  @ApiOkResponseResult({
+    model: TodoVo,
+    description: '成功更新todo',
+  })
+  async updateTodo(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateTodoDto
+  ): Promise<TodoVo> {
+    const todo = await this.todosService.update({ ...dto, id });
     return new TodoVo(todo);
   }
 }
