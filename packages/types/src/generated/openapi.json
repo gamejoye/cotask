@@ -85,6 +85,174 @@
         "tags": ["auth"]
       }
     },
+    "/todos/today": {
+      "get": {
+        "operationId": "TodosController_getTodosByToday",
+        "parameters": [
+          {
+            "name": "_start",
+            "required": true,
+            "in": "query",
+            "description": "paging起始位置",
+            "schema": {
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "_end",
+            "required": true,
+            "in": "query",
+            "description": "paging结束位置（不包括当前）",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "_order",
+            "required": true,
+            "in": "query",
+            "description": "排序方式",
+            "schema": {
+              "example": "ASC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": true,
+            "in": "query",
+            "description": "排序所依据的属性",
+            "schema": {
+              "example": "id",
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "query",
+            "description": "用户id",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功todo列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GetTodosVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "获取今日todo",
+        "tags": ["todos"]
+      }
+    },
+    "/todos/all": {
+      "get": {
+        "operationId": "TodosController_getAllTodos",
+        "parameters": [
+          {
+            "name": "_start",
+            "required": true,
+            "in": "query",
+            "description": "paging起始位置",
+            "schema": {
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "_end",
+            "required": true,
+            "in": "query",
+            "description": "paging结束位置（不包括当前）",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "_order",
+            "required": true,
+            "in": "query",
+            "description": "排序方式",
+            "schema": {
+              "example": "ASC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": true,
+            "in": "query",
+            "description": "排序所依据的属性",
+            "schema": {
+              "example": "id",
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "query",
+            "description": "用户id",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功todo列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GetTodosVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "获取所有todo",
+        "tags": ["todos"]
+      }
+    },
     "/todos/{id}": {
       "get": {
         "operationId": "TodosController_getTodoById",
@@ -126,6 +294,55 @@
           }
         },
         "summary": "根据id获取todo",
+        "tags": ["todos"]
+      },
+      "put": {
+        "operationId": "TodosController_updateTodo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTodoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功更新todo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/TodoVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "更新todo",
         "tags": ["todos"]
       }
     },
@@ -686,6 +903,68 @@
           "dueDate",
           "createdBy"
         ]
+      },
+      "UpdateTodoDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Learn React",
+            "description": "todo标题"
+          },
+          "description": {
+            "type": "string",
+            "example": "一周之内学会如何使用React写一个应用",
+            "description": "todo描述"
+          },
+          "priority": {
+            "type": "string",
+            "example": "HIGH",
+            "enum": ["HIGH", "MEDIUM", "LOW"],
+            "description": "todo优先级"
+          },
+          "frequency": {
+            "type": "string",
+            "example": "NONE",
+            "enum": ["NONE", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"],
+            "description": "todo频率"
+          },
+          "frequencyOption": {
+            "type": "object",
+            "example": null,
+            "description": "todo频率选项",
+            "nullable": true,
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["DAILY", "WEEKLY", "MONTHLY", "YEARLY"],
+                "description": "频率类型"
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "circleTime": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "days": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [1, 3, 5]
+                  }
+                }
+              }
+            }
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2023-01-01",
+            "description": "todo截止日期"
+          }
+        },
+        "required": ["title", "description", "priority", "frequency", "frequencyOption", "dueDate"]
       },
       "GroupVo": {
         "type": "object",

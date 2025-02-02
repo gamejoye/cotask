@@ -33,6 +33,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/todos/today': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** 获取今日todo */
+    get: operations['TodosController_getTodosByToday'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/todos/all': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** 获取所有todo */
+    get: operations['TodosController_getAllTodos'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/todos/{id}': {
     parameters: {
       query?: never;
@@ -42,7 +76,8 @@ export interface paths {
     };
     /** 根据id获取todo */
     get: operations['TodosController_getTodoById'];
-    put?: never;
+    /** 更新todo */
+    put: operations['TodosController_updateTodo'];
     post?: never;
     delete?: never;
     options?: never;
@@ -316,6 +351,56 @@ export interface components {
        */
       createdBy: number;
     };
+    UpdateTodoDto: {
+      /**
+       * @description todo标题
+       * @example Learn React
+       */
+      title: string;
+      /**
+       * @description todo描述
+       * @example 一周之内学会如何使用React写一个应用
+       */
+      description: string;
+      /**
+       * @description todo优先级
+       * @example HIGH
+       * @enum {string}
+       */
+      priority: 'HIGH' | 'MEDIUM' | 'LOW';
+      /**
+       * @description todo频率
+       * @example NONE
+       * @enum {string}
+       */
+      frequency: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+      /**
+       * @description todo频率选项
+       * @example null
+       */
+      frequencyOption: {
+        /**
+         * @description 频率类型
+         * @enum {string}
+         */
+        type?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+        options?: {
+          /** @example 1 */
+          circleTime?: number;
+          /** @example [
+           *       1,
+           *       3,
+           *       5
+           *     ] */
+          days?: number[];
+        };
+      } | null;
+      /**
+       * @description todo截止日期
+       * @example 2023-01-01
+       */
+      dueDate: string;
+    };
     GroupVo: {
       /**
        * @description 分组id
@@ -415,6 +500,72 @@ export interface operations {
       };
     };
   };
+  TodosController_getTodosByToday: {
+    parameters: {
+      query: {
+        /** @description paging起始位置 */
+        _start: number;
+        /** @description paging结束位置（不包括当前） */
+        _end: number;
+        /** @description 排序方式 */
+        _order: 'ASC' | 'DESC';
+        /** @description 排序所依据的属性 */
+        _sort: string;
+        /** @description 用户id */
+        user_id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 成功todo列表 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: components['schemas']['GetTodosVo'];
+          };
+        };
+      };
+    };
+  };
+  TodosController_getAllTodos: {
+    parameters: {
+      query: {
+        /** @description paging起始位置 */
+        _start: number;
+        /** @description paging结束位置（不包括当前） */
+        _end: number;
+        /** @description 排序方式 */
+        _order: 'ASC' | 'DESC';
+        /** @description 排序所依据的属性 */
+        _sort: string;
+        /** @description 用户id */
+        user_id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 成功todo列表 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: components['schemas']['GetTodosVo'];
+          };
+        };
+      };
+    };
+  };
   TodosController_getTodoById: {
     parameters: {
       query?: never;
@@ -443,6 +594,34 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+    };
+  };
+  TodosController_updateTodo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateTodoDto'];
+      };
+    };
+    responses: {
+      /** @description 成功更新todo */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: components['schemas']['TodoVo'];
+          };
+        };
       };
     };
   };
