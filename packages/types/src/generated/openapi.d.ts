@@ -79,7 +79,8 @@ export interface paths {
     /** 更新todo */
     put: operations['TodosController_updateTodo'];
     post?: never;
-    delete?: never;
+    /** 删除todo */
+    delete: operations['TodosController_deleteTodo'];
     options?: never;
     head?: never;
     patch?: never;
@@ -246,7 +247,7 @@ export interface components {
        * @description todo描述
        * @example 一周之内学会如何使用React写一个应用
        */
-      description: string | null;
+      description: string;
       /**
        * @description todo优先级
        * @example HIGH
@@ -310,9 +311,9 @@ export interface components {
       /**
        * @description todo优先级
        * @example HIGH
-       * @enum {string}
+       * @enum {string|null}
        */
-      priority: 'HIGH' | 'MEDIUM' | 'LOW';
+      priority: 'HIGH' | 'MEDIUM' | 'LOW' | null;
       /**
        * @description todo频率
        * @example NONE
@@ -350,6 +351,11 @@ export interface components {
        * @example 1
        */
       createdBy: number;
+      /**
+       * @description 组id
+       * @example 1
+       */
+      groupId: number;
     };
     UpdateTodoDto: {
       /**
@@ -358,6 +364,11 @@ export interface components {
        */
       title: string;
       /**
+       * @description todo是否完成
+       * @example false
+       */
+      completed: boolean;
+      /**
        * @description todo描述
        * @example 一周之内学会如何使用React写一个应用
        */
@@ -365,9 +376,9 @@ export interface components {
       /**
        * @description todo优先级
        * @example HIGH
-       * @enum {string}
+       * @enum {string|null}
        */
-      priority: 'HIGH' | 'MEDIUM' | 'LOW';
+      priority: 'HIGH' | 'MEDIUM' | 'LOW' | null;
       /**
        * @description todo频率
        * @example NONE
@@ -620,6 +631,30 @@ export interface operations {
         content: {
           'application/json': components['schemas']['ApiBaseResult'] & {
             data: components['schemas']['TodoVo'];
+          };
+        };
+      };
+    };
+  };
+  TodosController_deleteTodo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 成功删除todo */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: boolean;
           };
         };
       };

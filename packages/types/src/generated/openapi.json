@@ -344,6 +344,45 @@
         },
         "summary": "更新todo",
         "tags": ["todos"]
+      },
+      "delete": {
+        "operationId": "TodosController_deleteTodo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功删除todo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "删除todo",
+        "tags": ["todos"]
       }
     },
     "/todos": {
@@ -741,8 +780,7 @@
           "description": {
             "type": "string",
             "example": "一周之内学会如何使用React写一个应用",
-            "description": "todo描述",
-            "nullable": true
+            "description": "todo描述"
           },
           "priority": {
             "type": "string",
@@ -846,7 +884,8 @@
             "type": "string",
             "example": "HIGH",
             "enum": ["HIGH", "MEDIUM", "LOW"],
-            "description": "todo优先级"
+            "description": "todo优先级",
+            "nullable": true
           },
           "frequency": {
             "type": "string",
@@ -892,6 +931,11 @@
             "type": "number",
             "example": 1,
             "description": "创建者id"
+          },
+          "groupId": {
+            "type": "number",
+            "example": 1,
+            "description": "组id"
           }
         },
         "required": [
@@ -901,7 +945,8 @@
           "frequency",
           "frequencyOption",
           "dueDate",
-          "createdBy"
+          "createdBy",
+          "groupId"
         ]
       },
       "UpdateTodoDto": {
@@ -912,6 +957,11 @@
             "example": "Learn React",
             "description": "todo标题"
           },
+          "completed": {
+            "type": "boolean",
+            "example": false,
+            "description": "todo是否完成"
+          },
           "description": {
             "type": "string",
             "example": "一周之内学会如何使用React写一个应用",
@@ -921,7 +971,8 @@
             "type": "string",
             "example": "HIGH",
             "enum": ["HIGH", "MEDIUM", "LOW"],
-            "description": "todo优先级"
+            "description": "todo优先级",
+            "nullable": true
           },
           "frequency": {
             "type": "string",
@@ -964,7 +1015,15 @@
             "description": "todo截止日期"
           }
         },
-        "required": ["title", "description", "priority", "frequency", "frequencyOption", "dueDate"]
+        "required": [
+          "title",
+          "completed",
+          "description",
+          "priority",
+          "frequency",
+          "frequencyOption",
+          "dueDate"
+        ]
       },
       "GroupVo": {
         "type": "object",
