@@ -64,6 +64,10 @@ export default function TodoItem({
   };
 
   const handleConfirm = () => {
+    if (newTodo.title.trim() === '') {
+      onCancel && onCancel();
+      return;
+    }
     onEdit(newTodo);
   };
   // 编辑态
@@ -83,14 +87,17 @@ export default function TodoItem({
           <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
             <div style={{ display: 'flex', width: '100%' }}>
               <TodoRadio isNew={true} />
-              <Input
-                value={newTodo.title}
-                onChange={e => onTitleChange(e.target.value)}
-                variant='borderless'
-                style={{ paddingLeft: 0 }}
-                ref={editRef}
-                suffix={<MenuOutlined onClick={showModal} />}
-              />
+              <div style={{ flex: 1 }}>
+                <Input
+                  value={newTodo.title}
+                  onChange={e => onTitleChange(e.target.value)}
+                  variant='borderless'
+                  style={{ paddingLeft: 0 }}
+                  ref={editRef}
+                  suffix={<MenuOutlined onClick={showModal} />}
+                />
+                <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {newTodo.dueDate}</div>
+              </div>
             </div>
             <Space style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
               <Tooltip

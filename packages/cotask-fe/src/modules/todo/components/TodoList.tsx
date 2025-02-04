@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import TodoItem from './TodoItem';
 import { Todo } from '@cotask-fe/shared/models';
+import dayjs from 'dayjs';
 
 export type Props = {
   title: string;
@@ -36,7 +37,7 @@ export default function TodoList({
     if (creating) {
       dataSource.push({
         type: 'edit',
-        todo: new Todo(),
+        todo: { ...new Todo(), dueDate: dayjs().format('YYYY-MM-DD') },
       });
     }
     dataSource.push(
