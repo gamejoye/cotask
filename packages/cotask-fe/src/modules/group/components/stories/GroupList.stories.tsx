@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
 import GroupList from '../GroupList';
-import { User } from '@cotask/types';
+import { User } from '@cotask-fe/shared/models';
 
 const meta: Meta<typeof GroupList> = {
   title: 'Modules/Group/GroupList',

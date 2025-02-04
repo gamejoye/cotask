@@ -1,8 +1,8 @@
 import { useAuth } from '@cotask-fe/modules/auth/hooks';
-import { Group } from '@cotask/types';
 import { useRequest } from 'ahooks';
 import { getGroupsApi } from '../apis/getgroups';
 import { useEffect } from 'react';
+import { Group } from '@cotask-fe/shared/models';
 
 type UseGroupReturnType = {
   groups: Group[];

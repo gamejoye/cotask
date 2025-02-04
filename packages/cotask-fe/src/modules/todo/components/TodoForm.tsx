@@ -3,9 +3,10 @@ import { useForm } from 'antd/es/form/Form';
 import Modal from 'antd/es/modal/Modal';
 import { useState } from 'react';
 import CotaskDatePicker from '@cotask-fe/shared/components/CotaskDatePicker';
-import { FrequencyOptions, FrequencyTypes, frequencyTypes, Todo } from '@cotask/types';
+import { FrequencyOptions, FrequencyTypes, frequencyTypes } from '@cotask/types';
 import dayjs from 'dayjs';
 import { useLastState } from '@cotask-fe/shared/hooks';
+import { Todo } from '@cotask-fe/shared/models';
 
 export type Props = {
   todo: Todo;

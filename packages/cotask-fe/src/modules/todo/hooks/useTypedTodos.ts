@@ -27,6 +27,9 @@ export function useTypedTodos(type: 'today' | 'all' | null): UseTodoReturnType {
       todos: [],
       loading: false,
       error: '',
+      mutative: (() => {}) as any,
+      create: (() => {}) as any,
+      remove: (() => {}) as any,
     };
   }
   return {
@@ -36,5 +39,8 @@ export function useTypedTodos(type: 'today' | 'all' | null): UseTodoReturnType {
         : [],
     loading,
     error: error?.message ?? '',
+    mutative: (() => {}) as any,
+    create: (() => {}) as any,
+    remove: (() => {}) as any,
   };
 }

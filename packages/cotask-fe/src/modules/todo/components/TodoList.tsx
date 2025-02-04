@@ -2,7 +2,7 @@ import { List, Typography, Button, Flex } from 'antd';
 import { useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import TodoItem from './TodoItem';
-import { FrequencyTypes, Todo } from '@cotask/types';
+import { Todo } from '@cotask-fe/shared/models';
 
 export type Props = {
   title: string;
@@ -36,14 +36,7 @@ export default function TodoList({
     if (creating) {
       dataSource.push({
         type: 'edit',
-        todo: {
-          id: 0,
-          title: '',
-          completed: false,
-          dueDate: '',
-          createdAt: '',
-          frequency: FrequencyTypes.NONE,
-        },
+        todo: new Todo(),
       });
     }
     dataSource.push(

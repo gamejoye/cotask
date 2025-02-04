@@ -1,4 +1,4 @@
-import { User } from '@cotask/types';
+import { User } from '@cotask-fe/shared/models';
 import { create } from 'zustand';
 
 type StoreType = {

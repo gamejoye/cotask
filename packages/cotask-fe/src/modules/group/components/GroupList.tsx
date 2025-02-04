@@ -1,4 +1,4 @@
-import { Group } from '@cotask/types';
+import { Group } from '@cotask-fe/shared/models';
 import { Avatar, Button, List, Result, Typography } from 'antd';
 
 export type Props = {

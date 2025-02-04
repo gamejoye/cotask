@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import useToken from 'antd/es/theme/useToken';
 import { CheckOutlined, CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import TodoForm from './TodoForm';
-import { Todo } from '@cotask/types';
+import { Todo } from '@cotask-fe/shared/models';
 
 export type Props = {
   todo: Todo;

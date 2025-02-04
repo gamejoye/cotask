@@ -1,14 +1,14 @@
 import { PlusOutlined } from '@ant-design/icons';
+import { useAuth } from '@cotask-fe/modules/auth/hooks';
 import GroupList from '@cotask-fe/modules/group/components/GroupList';
 import { useGroup } from '@cotask-fe/modules/group/hooks';
 import TodoList from '@cotask-fe/modules/todo/components/TodoList';
 import { useTodo, useTypedTodos } from '@cotask-fe/modules/todo/hooks';
 import CotaskCard from '@cotask-fe/shared/components/CotaskCard';
 import CotaskLogo from '@cotask-fe/shared/components/CotaskLogo';
-import { Group } from '@cotask/types';
+import { Group, Todo } from '@cotask-fe/shared/models';
 import { Button, Layout, theme, Typography } from 'antd';
 import { useState } from 'react';
-
 const { Sider, Header, Content, Footer } = Layout;
 
 const siderStyle: React.CSSProperties = {
@@ -20,11 +20,12 @@ const siderStyle: React.CSSProperties = {
 };
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const { groups, loading: groupsLoading, error: groupsError } = useGroup();
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [selectedType, setSelectedType] = useState<'today' | 'all' | null>('today');
   const { todos: typedTodos } = useTypedTodos(selectedType);
-  const { todos } = useTodo(selectedGroup);
+  const { todos, mutative, create, remove } = useTodo(selectedGroup);
   const showTodos = selectedType === null ? todos : typedTodos;
   const {
     token: { colorBgContainer, colorFillContent },
@@ -143,9 +144,35 @@ export default function Dashboard() {
                   ? '今日'
                   : '全部'
             }
-            onDelete={() => {}}
-            onComplete={() => {}}
-            onEdit={() => {}}
+            onDelete={todo => {
+              remove({ id: todo.id });
+            }}
+            onComplete={todo => {
+              mutative(
+                {
+                  id: todo.id,
+                },
+                { ...todo, completed: true }
+              );
+            }}
+            onEdit={todo => {
+              if (Todo.isEmpty(todo)) {
+                // 创建
+                if (selectedGroup) {
+                  create({ ...todo, createdBy: user!.id, groupId: selectedGroup.id });
+                } else {
+                  // TODO 支持typed todos的创建
+                }
+              } else {
+                // 更新
+                mutative(
+                  {
+                    id: todo.id,
+                  },
+                  todo
+                );
+              }
+            }}
             loadMore={() => {}}
             hasMore={false}
           />
