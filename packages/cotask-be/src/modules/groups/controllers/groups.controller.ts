@@ -1,10 +1,15 @@
-import { ApiBaseResult, ApiOkResponseResult } from '@cotask-be/common/types';
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  ApiBaseResult,
+  ApiCreatedResponseResult,
+  ApiOkResponseResult,
+} from '@cotask-be/common/types';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IGroupsService } from '../services/groups.abstract';
 import { GetGroupsDto } from '../dtos/get-groups.dto';
 import { GroupVo } from '../vos/group.vo';
 import { GetGroupsVo } from '../vos/get-groups.vo';
+import { CreateGroupDto } from '../dtos/create-group.dto';
 
 @ApiExtraModels(ApiBaseResult)
 @ApiTags('groups')
@@ -24,5 +29,13 @@ export class GroupsController {
       total,
       data: groups.map(g => new GroupVo(g)),
     };
+  }
+
+  @Post('')
+  @ApiOperation({ summary: '创建分组' })
+  @ApiCreatedResponseResult({ model: GroupVo, description: '分组数据' })
+  async createGroup(@Body() body: CreateGroupDto): Promise<GroupVo> {
+    const group = await this.groupsService.create(body, body.createdBy);
+    return new GroupVo(group);
   }
 }
