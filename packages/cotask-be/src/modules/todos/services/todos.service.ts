@@ -3,8 +3,8 @@ import { ITodosService } from './todos.abstract';
 import { Todo } from '../entities/todo.entity';
 import { GROUP_REPO, TODO_REPO } from '@cotask-be/common/constans/table-repos';
 import { Repository, Raw, In } from 'typeorm';
-import { Group } from '@cotask/types';
 import { BasePaging } from '@cotask-be/common/types';
+import { Group } from '@cotask-be/modules/groups';
 
 @Injectable()
 export class TodosService extends ITodosService {
@@ -116,13 +116,15 @@ export class TodosService extends ITodosService {
     });
   }
   async create(
-    todo: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'completed'>,
-    createBy: number
+    todo: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'group' | 'completed'>,
+    createBy: number,
+    group: number
   ): Promise<Todo> {
     const entity = this.todosRepository.create({
       ...todo,
       completed: false,
       createdBy: { id: createBy },
+      group: { id: group },
     });
     await this.todosRepository.save(entity);
     return this.todosRepository.findOne({

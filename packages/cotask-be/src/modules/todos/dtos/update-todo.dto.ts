@@ -1,6 +1,6 @@
 import { FrequencyTypes, PriorityTypes } from '@cotask/types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsObject, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsObject, IsString, ValidateIf } from 'class-validator';
 
 export class UpdateTodoDto {
   @ApiProperty({
@@ -9,6 +9,13 @@ export class UpdateTodoDto {
   })
   @IsString()
   title: string;
+
+  @ApiProperty({
+    example: false,
+    description: 'todo是否完成',
+  })
+  @IsBoolean()
+  completed: boolean;
 
   @ApiProperty({
     example: '一周之内学会如何使用React写一个应用',
@@ -21,9 +28,10 @@ export class UpdateTodoDto {
     example: PriorityTypes.HIGH,
     enum: PriorityTypes,
     description: 'todo优先级',
+    nullable: true,
   })
-  @IsOptional()
   @IsEnum(PriorityTypes)
+  @ValidateIf((object, value) => value !== null)
   priority: PriorityTypes | null;
 
   @ApiProperty({
@@ -64,6 +72,7 @@ export class UpdateTodoDto {
     },
   })
   @IsObject()
+  @ValidateIf((object, value) => value !== null)
   frequencyOption: {
     type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
     options: {

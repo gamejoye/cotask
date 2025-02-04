@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ITodosService } from '../services/todos.abstract';
 import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
@@ -77,7 +87,7 @@ export class TodosController {
     description: '成功创建todo',
   })
   async createTodo(@Body() dto: CreateTodoDto): Promise<TodoVo> {
-    const todo = await this.todosService.create(dto, dto.createdBy);
+    const todo = await this.todosService.create(dto, dto.createdBy, dto.groupId);
     return new TodoVo(todo);
   }
 
@@ -93,5 +103,16 @@ export class TodosController {
   ): Promise<TodoVo> {
     const todo = await this.todosService.update({ ...dto, id });
     return new TodoVo(todo);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: '删除todo' })
+  @ApiOkResponseResult({
+    model: 'boolean',
+    description: '成功删除todo',
+  })
+  async deleteTodo(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
+    await this.todosService.delete(id);
+    return true;
   }
 }

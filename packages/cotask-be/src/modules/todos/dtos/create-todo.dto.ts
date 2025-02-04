@@ -1,6 +1,6 @@
 import { FrequencyTypes, PriorityTypes } from '@cotask/types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsNumber, IsObject, IsString, ValidateIf } from 'class-validator';
 
 export class CreateTodoDto {
   @ApiProperty({
@@ -21,9 +21,10 @@ export class CreateTodoDto {
     example: PriorityTypes.HIGH,
     enum: PriorityTypes,
     description: 'todo优先级',
+    nullable: true,
   })
-  @IsOptional()
   @IsEnum(PriorityTypes)
+  @ValidateIf((object, value) => value !== null)
   priority: PriorityTypes | null;
 
   @ApiProperty({
@@ -64,6 +65,7 @@ export class CreateTodoDto {
     },
   })
   @IsObject()
+  @ValidateIf((object, value) => value !== null)
   frequencyOption: {
     type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
     options: {
@@ -85,4 +87,11 @@ export class CreateTodoDto {
   })
   @IsNumber()
   createdBy: number;
+
+  @ApiProperty({
+    example: 1,
+    description: '组id',
+  })
+  @IsNumber()
+  groupId: number;
 }

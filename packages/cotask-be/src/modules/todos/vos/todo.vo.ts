@@ -55,9 +55,8 @@ export class TodoVo {
   @ApiProperty({
     example: '一周之内学会如何使用React写一个应用',
     description: 'todo描述',
-    nullable: true,
   })
-  description: string | null;
+  description: string;
 
   @ApiProperty({
     example: PriorityTypes.HIGH,
