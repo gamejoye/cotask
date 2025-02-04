@@ -35,6 +35,7 @@ export class GroupsController {
   @ApiOperation({ summary: '创建分组' })
   @ApiCreatedResponseResult({ model: GroupVo, description: '分组数据' })
   async createGroup(@Body() body: CreateGroupDto): Promise<GroupVo> {
+    // TODO 支持附带邀请用户功能
     const group = await this.groupsService.create(body, body.createdBy);
     return new GroupVo(group);
   }
