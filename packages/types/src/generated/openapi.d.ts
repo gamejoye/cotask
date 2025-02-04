@@ -114,7 +114,8 @@ export interface paths {
     /** 根据user_id分页获取分组 */
     get: operations['GroupsController_getGroups'];
     put?: never;
-    post?: never;
+    /** 创建分组 */
+    post: operations['GroupsController_createGroup'];
     delete?: never;
     options?: never;
     head?: never;
@@ -450,6 +451,23 @@ export interface components {
       /** @description 分组数据 */
       data: components['schemas']['GroupVo'][];
     };
+    CreateGroupDto: {
+      /**
+       * @description 分组名称
+       * @example 学习
+       */
+      name: string;
+      /**
+       * @description 分组描述
+       * @example 寒假ACM集训
+       */
+      description: string;
+      /**
+       * @description 创建者
+       * @example 1
+       */
+      createdBy: number;
+    };
   };
   responses: never;
   parameters: never;
@@ -754,6 +772,32 @@ export interface operations {
         content: {
           'application/json': components['schemas']['ApiBaseResult'] & {
             data: components['schemas']['GetGroupsVo'];
+          };
+        };
+      };
+    };
+  };
+  GroupsController_createGroup: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateGroupDto'];
+      };
+    };
+    responses: {
+      /** @description 分组数据 */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: components['schemas']['GroupVo'];
           };
         };
       };
