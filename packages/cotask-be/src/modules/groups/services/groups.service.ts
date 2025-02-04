@@ -1,27 +1,50 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IGroupsService } from './groups.abstract';
 import { BasePaging } from '@cotask-be/common/types';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Group } from '../entities/group.entity';
-import { GROUP_REPO } from '@cotask-be/common/constans/table-repos';
+import {
+  DATA_SOURCE,
+  GROUP_REPO,
+  USERS_GROUPS_REPO,
+  USER_REPO,
+} from '@cotask-be/common/constans/table-repos';
+import { User } from '@cotask-be/modules/users';
+import { UsersGroups } from '@cotask-be/modules/users-groups';
 
 @Injectable()
 export class GroupsService extends IGroupsService {
-  constructor(@Inject(GROUP_REPO) protected groupsRepository: Repository<Group>) {
+  constructor(
+    @Inject(GROUP_REPO) protected groupsRepository: Repository<Group>,
+    @Inject(USER_REPO) protected usersRepository: Repository<User>,
+    @Inject(USERS_GROUPS_REPO) protected userGroupsRepository: Repository<UsersGroups>,
+    @Inject(DATA_SOURCE) protected dataSource: DataSource
+  ) {
     super();
   }
   async create(
     group: Omit<Group, 'id' | 'createdAt' | 'updatedAt'>,
     createdBy: number
   ): Promise<Group> {
-    const entity = this.groupsRepository.create({
-      ...group,
-      createdBy: { id: createdBy },
-    });
-    await this.groupsRepository.save(entity);
-    return this.groupsRepository.findOne({
-      where: { id: entity.id },
-      relations: ['createdBy'],
+    return this.dataSource.transaction(async manager => {
+      const createdByUser = await manager.findOne(User, { where: { id: createdBy } });
+      if (!createdByUser) {
+        throw new NotFoundException('创建者不存在');
+      }
+      const entity = manager.create(Group, {
+        ...group,
+        createdBy: createdByUser,
+      });
+      await manager.save(Group, entity);
+      const newGroup = await manager.findOne(Group, {
+        where: { id: entity.id },
+        relations: ['createdBy'],
+      });
+      await manager.save(UsersGroups, {
+        group: { id: newGroup.id },
+        user: { id: createdByUser.id },
+      });
+      return newGroup;
     });
   }
   async getById(id: number): Promise<Group> {
