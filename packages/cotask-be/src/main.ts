@@ -9,6 +9,7 @@ import {
 } from '@cotask-be/common/constans/swagger';
 import { ResTransformInterceptor } from '@cotask-be/common/interceptors';
 import { HttpExceptionFilter } from '@cotask-be/common/filters';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,6 +24,11 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // 只允许声明的属性
+    })
+  );
   app.useGlobalInterceptors(new ResTransformInterceptor());
 
   await app.listen(8080);
