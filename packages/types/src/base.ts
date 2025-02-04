@@ -14,9 +14,9 @@ export enum FrequencyTypes {
   YEARLY = 'YEARLY',
 }
 
-export type Todo = components['schemas']['TodoVo'];
-export type Group = components['schemas']['GroupVo'];
-export type User = components['schemas']['UserVo'];
+export type TodoVo = components['schemas']['TodoVo'];
+export type GroupVo = components['schemas']['GroupVo'];
+export type UserVo = components['schemas']['UserVo'];
 
 export const frequencyTypes = [
   FrequencyTypes.NONE,
