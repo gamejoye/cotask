@@ -22,7 +22,7 @@ const siderStyle: React.CSSProperties = {
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const { groups, loading: groupsLoading, error: groupsError, create: createGroup } = useGroup();
+  const { groups, create: createGroup, loadMore, hasMore } = useGroup();
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [selectedType, setSelectedType] = useState<'today' | 'all' | null>('today');
   const { todos: typedTodos } = useTypedTodos(selectedType);
@@ -56,6 +56,7 @@ export default function Dashboard() {
               <CotaskLogo size='small' />
             </Header>
             <Content
+              id='cotask-group-list'
               style={{
                 flex: 1,
                 overflow: 'scroll',
@@ -90,16 +91,13 @@ export default function Dashboard() {
               </div>
               <GroupList
                 groups={groups}
-                loading={groupsLoading}
-                error={groupsError}
                 onClick={group => {
                   setSelectedGroup(group);
                   setSelectedType(null);
                 }}
-                hasMore={false}
-                loadMore={() => {
-                  console.log('loadMore');
-                }}
+                container='cotask-group-list'
+                hasMore={hasMore}
+                loadMore={loadMore}
               />
             </Content>
             <Footer

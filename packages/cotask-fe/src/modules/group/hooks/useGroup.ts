@@ -1,5 +1,5 @@
 import { useAuth } from '@cotask-fe/modules/auth/hooks';
-import { useRequest } from 'ahooks';
+import { useCounter, useRequest } from 'ahooks';
 import { getGroupsApi } from '../apis/getgroups';
 import { useEffect, useState } from 'react';
 import { Group } from '@cotask-fe/shared/models';
@@ -9,12 +9,16 @@ type UseGroupReturnType = {
   groups: Group[];
   loading: boolean;
   error: string;
+  hasMore: boolean;
   create: (...args: Parameters<typeof createGroupApi>) => Promise<Group | null>;
+  loadMore: () => void;
 };
 
-// TODO groups 虚拟列表
+const PAGE_SIZE = 5;
+
 export function useGroup(): UseGroupReturnType {
   const [error, setError] = useState<Error | undefined>(undefined);
+  const [totalGroups, { inc: incTotalGroups, set: setTotalGroups }] = useCounter(0);
   const { isAuthenticated, user } = useAuth();
   const [groups, setGroups] = useState<Group[]>([]);
   const { loading, runAsync: runGetGroupsAsync } = useRequest(getGroupsApi, {
@@ -28,12 +32,37 @@ export function useGroup(): UseGroupReturnType {
     manual: true,
   });
 
+  const loadMore = () => {
+    if (groups.length >= totalGroups || !isAuthenticated || !user) return;
+    (async () => {
+      try {
+        const res = await runGetGroupsAsync({
+          _start: groups.length,
+          _end: groups.length + PAGE_SIZE,
+          _sort: 'createdAt',
+          _order: 'DESC',
+          user_id: user.id,
+        });
+        if (res && res.data && (res.statusCode + '').startsWith('2')) {
+          const { data, total } = res.data;
+          setGroups([...groups, ...data]);
+          setTotalGroups(total);
+        } else {
+          throw new Error('获取分组失败');
+        }
+      } catch (e) {
+        setError(e as Error);
+      }
+    })();
+  };
+
   const create: UseGroupReturnType['create'] = async (...args) => {
     try {
       const res = await runCreateGroupAsync(...args);
       if (res && res.data && (res.statusCode + '').startsWith('2')) {
         const group = res.data;
         setGroups([group, ...groups]);
+        incTotalGroups();
         return group;
       }
       throw new Error('创建分组失败');
@@ -49,13 +78,15 @@ export function useGroup(): UseGroupReturnType {
         try {
           const res = await runGetGroupsAsync({
             _start: 0,
-            _end: 10,
+            _end: PAGE_SIZE,
             _sort: 'createdAt',
             _order: 'DESC',
             user_id: user.id,
           });
           if (res && res.data && (res.statusCode + '').startsWith('2')) {
-            setGroups(res.data.data);
+            const { data, total } = res.data;
+            setGroups(data);
+            setTotalGroups(total);
           } else {
             throw new Error('获取分组失败');
           }
@@ -71,6 +102,8 @@ export function useGroup(): UseGroupReturnType {
       loading,
       error: error?.message ?? '',
       create,
+      hasMore: false,
+      loadMore,
     };
   }
   return {
@@ -78,5 +111,7 @@ export function useGroup(): UseGroupReturnType {
     loading,
     error: error?.message ?? '',
     create,
+    hasMore: totalGroups > groups.length,
+    loadMore,
   };
 }
