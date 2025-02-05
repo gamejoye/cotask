@@ -122,6 +122,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/groups/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** 更新群组 */
+    put: operations['GroupsController_updateGroup'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -468,6 +485,18 @@ export interface components {
        */
       createdBy: number;
     };
+    UpdateGroupDto: {
+      /**
+       * @description 分组名称
+       * @example 学习
+       */
+      name: string;
+      /**
+       * @description 分组描述
+       * @example 寒假ACM集训
+       */
+      description: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -792,6 +821,34 @@ export interface operations {
     responses: {
       /** @description 分组数据 */
       201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: components['schemas']['GroupVo'];
+          };
+        };
+      };
+    };
+  };
+  GroupsController_updateGroup: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateGroupDto'];
+      };
+    };
+    responses: {
+      /** @description 分组更新后的数据 */
+      200: {
         headers: {
           [name: string]: unknown;
         };

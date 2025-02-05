@@ -635,6 +635,57 @@
         "summary": "创建分组",
         "tags": ["groups"]
       }
+    },
+    "/groups/{id}": {
+      "put": {
+        "operationId": "GroupsController_updateGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "分组更新后的数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GroupVo"
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "更新群组",
+        "tags": ["groups"]
+      }
     }
   },
   "info": {
@@ -1142,6 +1193,22 @@
           }
         },
         "required": ["name", "description", "createdBy"]
+      },
+      "UpdateGroupDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "学习",
+            "description": "分组名称"
+          },
+          "description": {
+            "type": "string",
+            "example": "寒假ACM集训",
+            "description": "分组描述"
+          }
+        },
+        "required": ["name", "description"]
       }
     }
   }
