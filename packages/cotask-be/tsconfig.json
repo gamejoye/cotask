@@ -7,6 +7,7 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "esnext",
+    "useDefineForClassFields": false, // 禁用类字段定义 （防止class出现属性明明没有传递却被赋值为undefined的情况）
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
