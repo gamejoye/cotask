@@ -4,7 +4,7 @@ import GroupForm from '@cotask-fe/modules/group/components/GroupForm';
 import GroupList from '@cotask-fe/modules/group/components/GroupList';
 import { useGroup } from '@cotask-fe/modules/group/hooks';
 import TodoList from '@cotask-fe/modules/todo/components/TodoList';
-import { useTodo, useTypedTodos } from '@cotask-fe/modules/todo/hooks';
+import { useTodo } from '@cotask-fe/modules/todo/hooks';
 import CotaskCard from '@cotask-fe/shared/components/CotaskCard';
 import CotaskLogo from '@cotask-fe/shared/components/CotaskLogo';
 import { Group, Todo } from '@cotask-fe/shared/models';
@@ -26,10 +26,16 @@ export default function Dashboard() {
   const [groupToEdit, setGroupToEdit] = useState<Group | null>(null);
   const [selectedType, setSelectedType] = useState<'today' | 'all' | null>('today');
   const [isGroupFormOpen, setIsGroupFormOpen] = useState(false);
-  const { todos: typedTodos } = useTypedTodos(selectedType);
   const { groups, create: createGroup, loadMore, hasMore, mutative: mutativeGroup } = useGroup();
-  const { todos, mutative, create, remove } = useTodo(selectedGroup);
-  const showTodos = selectedType === null ? todos : typedTodos;
+  const { todos, mutative, create, remove } = useTodo(
+    selectedGroup
+      ? {
+          group: selectedGroup,
+        }
+      : {
+          type: selectedType!,
+        }
+  );
   const {
     token: { colorBgContainer, colorFillContent },
   } = theme.useToken();
@@ -143,7 +149,7 @@ export default function Dashboard() {
             }}
           >
             <TodoList
-              todos={showTodos}
+              todos={todos}
               title={
                 selectedGroup !== null
                   ? selectedGroup.name

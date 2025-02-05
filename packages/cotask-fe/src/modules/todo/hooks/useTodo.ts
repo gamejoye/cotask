@@ -1,11 +1,12 @@
 import { Group, Todo } from '@cotask-fe/shared/models';
-import { useRequest } from 'ahooks';
+import { useCounter, useRequest } from 'ahooks';
 import { getTodosApi } from '../apis/get-todos';
 import { useAuth } from '@cotask-fe/modules/auth/hooks';
 import { useEffect, useState } from 'react';
 import { updateTodoApi } from '../apis/update-todo';
 import { createTodoApi } from '../apis/create-todo';
 import { deleteTodoApi } from '../apis/delete-todo';
+import { getTypedTodosApi } from '../apis/get-typed-todos';
 
 export type UseTodoReturnType = {
   todos: Todo[];
@@ -14,17 +15,65 @@ export type UseTodoReturnType = {
   mutative: (...args: Parameters<typeof updateTodoApi>) => Promise<Todo | null>;
   create: (...args: Parameters<typeof createTodoApi>) => Promise<Todo | null>;
   remove: (...args: Parameters<typeof deleteTodoApi>) => Promise<boolean>;
+  loadMore: () => void;
+  hasMore: boolean;
 };
 
+const PAGE_SIZE = 10;
+
+type UseTodoParams = { group: Group; type?: never } | { group?: never; type: 'today' | 'all' };
+
 // TODO todo虚拟列表
-export function useTodo(group: Group | null): UseTodoReturnType {
+export function useTodo(params: UseTodoParams): UseTodoReturnType {
+  const { group, type } = params;
   const [todos, setTodos] = useState<Todo[]>([]);
   const { isAuthenticated, user } = useAuth();
-  const { loading, runAsync: runGetTodosAsync } = useRequest(getTodosApi, { manual: true });
+  const [totalTodos, { inc, set, dec }] = useCounter(0, { min: 0 });
+  const { loading, runAsync: runGetTodosAsync } = useRequest(getTodosApi, {
+    manual: true,
+  });
   const { runAsync: runCreateTodoAsync } = useRequest(createTodoApi, { manual: true });
   const { runAsync: runUpdateTodoAsync } = useRequest(updateTodoApi, { manual: true });
   const { runAsync: runRemoveTodoAsync } = useRequest(deleteTodoApi, { manual: true });
+  const { loading: typedLoading, runAsync: runGetTypedTodosAsync } = useRequest(getTypedTodosApi, {
+    manual: true,
+  });
   const [error, setError] = useState<Error | undefined>(undefined);
+
+  console.log(params);
+
+  const loadMore = async () => {
+    if (!isAuthenticated || !user) return;
+    try {
+      const res = await (group
+        ? runGetTodosAsync({
+            _start: todos.length,
+            _end: todos.length + PAGE_SIZE,
+            _order: 'DESC',
+            _sort: 'createdAt',
+            group_id: group.id,
+          })
+        : runGetTypedTodosAsync({
+            type,
+            query: {
+              _start: todos.length,
+              _end: todos.length + PAGE_SIZE,
+              _order: 'DESC',
+              _sort: 'createdAt',
+              user_id: user.id,
+            },
+          }));
+      if (res && res.data && (res.statusCode + '').startsWith('2')) {
+        const { data, total } = res.data;
+        setTodos([...todos, ...data]);
+        set(total);
+      } else {
+        throw new Error('获取todo失败');
+      }
+    } catch (e) {
+      setError(e as Error);
+    }
+  };
 
   const mutative: UseTodoReturnType['mutative'] = async (params, body) => {
     try {
@@ -47,6 +96,7 @@ export function useTodo(group: Group | null): UseTodoReturnType {
       if (res && res.data && (res.statusCode + '').startsWith('2')) {
         const todo = res.data;
         setTodos([todo, ...todos]);
+        inc();
         return todo;
       }
       throw new Error('创建todo失败');
@@ -61,6 +111,7 @@ export function useTodo(group: Group | null): UseTodoReturnType {
       const res = await runRemoveTodoAsync(params);
       if (res && res.data && (res.statusCode + '').startsWith('2')) {
         setTodos(todos.filter(t => t.id !== params.id));
+        dec();
         return true;
       }
       throw new Error('删除todo失败');
@@ -71,18 +122,31 @@ export function useTodo(group: Group | null): UseTodoReturnType {
   };
 
   useEffect(() => {
-    if (isAuthenticated && user && group) {
+    if (isAuthenticated && user) {
       (async () => {
         try {
-          const res = await runGetTodosAsync({
-            _start: 0,
-            _end: 10,
-            _order: 'DESC',
-            _sort: 'createdAt',
-            group_id: group.id,
-          });
+          const res = await (group
+            ? runGetTodosAsync({
+                _start: 0,
+                _end: PAGE_SIZE,
+                _order: 'DESC',
+                _sort: 'createdAt',
+                group_id: group.id,
+              })
+            : runGetTypedTodosAsync({
+                type,
+                query: {
+                  _start: 0,
+                  _end: PAGE_SIZE,
+                  _order: 'DESC',
+                  _sort: 'createdAt',
+                  user_id: user.id,
+                },
+              }));
           if (res && res.data && (res.statusCode + '').startsWith('2')) {
-            setTodos(res.data.data);
+            const { data, total } = res.data;
+            setTodos(data);
+            set(total);
           } else {
             throw new Error('获取todo失败');
           }
@@ -91,23 +155,27 @@ export function useTodo(group: Group | null): UseTodoReturnType {
         }
       })();
     }
-  }, [isAuthenticated, user, group]);
-  if (!group || !isAuthenticated || !user) {
+  }, [isAuthenticated, user, group, type]);
+  if (!isAuthenticated || !user) {
     return {
       todos: [],
       loading: false,
       error: '',
+      hasMore: false,
       mutative,
       create,
       remove,
+      loadMore,
     };
   }
   return {
     todos,
-    loading,
+    loading: group ? loading : typedLoading,
     error: error?.message ?? '',
+    hasMore: totalTodos > todos.length,
     mutative,
     create,
     remove,
+    loadMore,
   };
 }
