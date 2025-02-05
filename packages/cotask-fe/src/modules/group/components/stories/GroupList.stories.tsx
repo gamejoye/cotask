@@ -57,8 +57,9 @@ export const Default: Story = {
     loadMore: fn(),
     hasMore: false,
     container: '',
+    onEdit: fn(),
   },
-  render: ({ onClick, loadMore }) => {
+  render: ({ onClick, loadMore, onEdit }) => {
     const [groups, setGroups] = useState(() => generateMockGroups(0, 10));
 
     const handleLoadMore = async () => {
@@ -84,6 +85,7 @@ export const Default: Story = {
             loadMore();
             handleLoadMore();
           }}
+          onEdit={onEdit}
           hasMore={groups.length < 50}
           container='cotaskGroupList'
         />
@@ -98,6 +100,7 @@ export const Empty: Story = {
     onClick: fn(),
     loadMore: fn(),
     hasMore: false,
+    onEdit: fn(),
     container: '',
   },
 };

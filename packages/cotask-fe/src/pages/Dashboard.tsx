@@ -22,13 +22,14 @@ const siderStyle: React.CSSProperties = {
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const { groups, create: createGroup, loadMore, hasMore } = useGroup();
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [groupToEdit, setGroupToEdit] = useState<Group | null>(null);
   const [selectedType, setSelectedType] = useState<'today' | 'all' | null>('today');
+  const [isGroupFormOpen, setIsGroupFormOpen] = useState(false);
   const { todos: typedTodos } = useTypedTodos(selectedType);
+  const { groups, create: createGroup, loadMore, hasMore } = useGroup();
   const { todos, mutative, create, remove } = useTodo(selectedGroup);
   const showTodos = selectedType === null ? todos : typedTodos;
-  const [isGroupFormOpen, setIsGroupFormOpen] = useState(false);
   const {
     token: { colorBgContainer, colorFillContent },
   } = theme.useToken();
@@ -98,6 +99,10 @@ export default function Dashboard() {
                 container='cotask-group-list'
                 hasMore={hasMore}
                 loadMore={loadMore}
+                onEdit={group => {
+                  setGroupToEdit(group);
+                  setIsGroupFormOpen(true);
+                }}
               />
             </Content>
             <Footer
@@ -112,6 +117,7 @@ export default function Dashboard() {
                 icon={<PlusOutlined />}
                 onClick={() => {
                   setIsGroupFormOpen(true);
+                  setGroupToEdit(null);
                 }}
                 type='dashed'
                 size='large'
@@ -180,10 +186,24 @@ export default function Dashboard() {
           </Content>
         </Layout>
       </Layout>
-      <Modal open={isGroupFormOpen} onCancel={() => setIsGroupFormOpen(false)} footer={null}>
+      <Modal
+        open={isGroupFormOpen}
+        onCancel={() => {
+          setIsGroupFormOpen(false);
+          setGroupToEdit(null);
+        }}
+        footer={null}
+      >
         <GroupForm
-          onSubmit={values => {
-            createGroup({ ...values, createdBy: user!.id });
+          group={groupToEdit ?? undefined}
+          onSubmit={group => {
+            if (Group.isEmpty(group)) {
+              createGroup({ ...group, createdBy: user!.id });
+            } else {
+              // TODO 更新群组
+              console.log('updateGroup', group);
+              // updateGroup({ ...group, createdBy: group.createdBy.id });
+            }
             setIsGroupFormOpen(false);
           }}
         />

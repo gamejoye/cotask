@@ -1,6 +1,7 @@
 import { Group } from '@cotask-fe/shared/models';
 import { Button, Form, Input } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import { useEffect } from 'react';
 
 const { TextArea } = Input;
 
@@ -11,16 +12,23 @@ interface GroupFormValues {
 
 interface Props {
   group?: Group;
-  onSubmit: (values: GroupFormValues) => void;
+  onSubmit: (values: Group) => void;
 }
 
 export default function GroupForm({ group, onSubmit }: Props) {
   const [form] = useForm<GroupFormValues>();
 
   const handleSubmit = async (values: GroupFormValues) => {
-    onSubmit(values);
+    onSubmit({ ...(group ?? new Group()), ...values });
     form.resetFields();
   };
+
+  useEffect(() => {
+    form.setFieldsValue({
+      name: group?.name ?? '',
+      description: group?.description ?? '',
+    });
+  }, [group]);
 
   return (
     <Form
@@ -47,7 +55,7 @@ export default function GroupForm({ group, onSubmit }: Props) {
 
       <Form.Item style={{ marginTop: 24, textAlign: 'right' }}>
         <Button type='primary' htmlType='submit' style={{ marginLeft: 8 }}>
-          创建
+          保存
         </Button>
       </Form.Item>
     </Form>
