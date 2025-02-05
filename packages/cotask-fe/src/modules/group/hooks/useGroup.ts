@@ -1,6 +1,6 @@
 import { useAuth } from '@cotask-fe/modules/auth/hooks';
 import { useCounter, useRequest } from 'ahooks';
-import { getGroupsApi } from '../apis/getgroups';
+import { getGroupsApi } from '../apis/get-groups';
 import { useEffect, useState } from 'react';
 import { Group } from '@cotask-fe/shared/models';
 import { createGroupApi } from '../apis/create-group';
