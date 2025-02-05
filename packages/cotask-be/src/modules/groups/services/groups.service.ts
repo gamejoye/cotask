@@ -22,8 +22,25 @@ export class GroupsService extends IGroupsService {
   ) {
     super();
   }
+  async update(
+    group: Partial<Pick<Group, 'name' | 'description'>> & Pick<Group, 'id'>
+  ): Promise<Group> {
+    const existingGroup = await this.groupsRepository.findOne({
+      where: { id: group.id },
+      relations: ['createdBy'],
+    });
+    if (!existingGroup) {
+      throw new NotFoundException('Group不存在');
+    }
+    console.log(existingGroup, group);
+    await this.groupsRepository.save({ ...existingGroup, ...group });
+    return {
+      ...existingGroup,
+      ...group,
+    };
+  }
   async create(
-    group: Omit<Group, 'id' | 'createdAt' | 'updatedAt'>,
+    group: Omit<Group, 'id' | 'createdAt' | 'updatedAt' | 'usersGroups' | 'todos' | 'createdBy'>,
     createdBy: number
   ): Promise<Group> {
     return this.dataSource.transaction(async manager => {

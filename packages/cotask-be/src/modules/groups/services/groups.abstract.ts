@@ -11,4 +11,7 @@ export abstract class IGroupsService {
   abstract getById(id: number): Promise<Group>;
   abstract getUserGroups(paging: BasePaging, userId: number): Promise<Group[]>;
   abstract countUserGroups(userId: number): Promise<number>;
+  abstract update(
+    group: Partial<Pick<Group, 'name' | 'description'>> & Pick<Group, 'id'>
+  ): Promise<Group>;
 }
