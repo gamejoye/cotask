@@ -27,7 +27,7 @@ export default function Dashboard() {
   const [selectedType, setSelectedType] = useState<'today' | 'all' | null>('today');
   const [isGroupFormOpen, setIsGroupFormOpen] = useState(false);
   const { todos: typedTodos } = useTypedTodos(selectedType);
-  const { groups, create: createGroup, loadMore, hasMore } = useGroup();
+  const { groups, create: createGroup, loadMore, hasMore, mutative: mutativeGroup } = useGroup();
   const { todos, mutative, create, remove } = useTodo(selectedGroup);
   const showTodos = selectedType === null ? todos : typedTodos;
   const {
@@ -200,9 +200,7 @@ export default function Dashboard() {
             if (Group.isEmpty(group)) {
               createGroup({ ...group, createdBy: user!.id });
             } else {
-              // TODO 更新群组
-              console.log('updateGroup', group);
-              // updateGroup({ ...group, createdBy: group.createdBy.id });
+              mutativeGroup({ id: group.id }, group);
             }
             setIsGroupFormOpen(false);
           }}

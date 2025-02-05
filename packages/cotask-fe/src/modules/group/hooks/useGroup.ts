@@ -4,13 +4,14 @@ import { getGroupsApi } from '../apis/get-groups';
 import { useEffect, useState } from 'react';
 import { Group } from '@cotask-fe/shared/models';
 import { createGroupApi } from '../apis/create-group';
-
+import { updateGroupApi } from '../apis/update-group';
 type UseGroupReturnType = {
   groups: Group[];
   loading: boolean;
   error: string;
   hasMore: boolean;
   create: (...args: Parameters<typeof createGroupApi>) => Promise<Group | null>;
+  mutative: (...args: Parameters<typeof updateGroupApi>) => Promise<Group | null>;
   loadMore: () => void;
 };
 
@@ -30,6 +31,13 @@ export function useGroup(): UseGroupReturnType {
 
   const { runAsync: runCreateGroupAsync } = useRequest(createGroupApi, {
     manual: true,
+  });
+
+  const { runAsync: runUpdateGroupAsync } = useRequest(updateGroupApi, {
+    manual: true,
+    onError(e) {
+      setError(e);
+    },
   });
 
   const loadMore = () => {
@@ -72,6 +80,21 @@ export function useGroup(): UseGroupReturnType {
     }
   };
 
+  const mutative: UseGroupReturnType['mutative'] = async (...args) => {
+    try {
+      const res = await runUpdateGroupAsync(...args);
+      if (res && res.data && (res.statusCode + '').startsWith('2')) {
+        const group = res.data;
+        setGroups(groups.map(g => (g.id === group.id ? group : g)));
+        return group;
+      }
+      throw new Error('更新分组失败');
+    } catch (e) {
+      setError(e as Error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated && user) {
       (async () => {
@@ -102,6 +125,7 @@ export function useGroup(): UseGroupReturnType {
       loading,
       error: error?.message ?? '',
       create,
+      mutative,
       hasMore: false,
       loadMore,
     };
@@ -111,6 +135,7 @@ export function useGroup(): UseGroupReturnType {
     loading,
     error: error?.message ?? '',
     create,
+    mutative,
     hasMore: totalGroups > groups.length,
     loadMore,
   };
