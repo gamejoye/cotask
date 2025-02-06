@@ -27,7 +27,14 @@ export default function Dashboard() {
   const [selectedType, setSelectedType] = useState<'today' | 'all' | null>('today');
   const [isGroupFormOpen, setIsGroupFormOpen] = useState(false);
   const { groups, create: createGroup, loadMore, hasMore, mutative: mutativeGroup } = useGroup();
-  const { todos, mutative, create, remove } = useTodo(
+  const {
+    todos,
+    mutative,
+    create,
+    remove,
+    loadMore: loadMoreTodos,
+    hasMore: hasMoreTodos,
+  } = useTodo(
     selectedGroup
       ? {
           group: selectedGroup,
@@ -139,6 +146,7 @@ export default function Dashboard() {
             <Typography.Title level={2}>当前群组任务</Typography.Title>
           </Header>
           <Content
+            id='cotaskTodoList'
             style={{
               margin: '32px 16px',
               padding: 24,
@@ -186,8 +194,9 @@ export default function Dashboard() {
                   );
                 }
               }}
-              loadMore={() => {}}
-              hasMore={false}
+              loadMore={loadMoreTodos}
+              hasMore={hasMoreTodos}
+              container='cotaskTodoList'
             />
           </Content>
         </Layout>
