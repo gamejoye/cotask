@@ -670,14 +670,14 @@ export interface operations {
       };
     };
     responses: {
-      /** @description 成功更新todo */
+      /** @description 返回更新后的Todo，如果completed为true，则返回null */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['ApiBaseResult'] & {
-            data: components['schemas']['TodoVo'];
+            data: components['schemas']['TodoVo'] | null;
           };
         };
       };
