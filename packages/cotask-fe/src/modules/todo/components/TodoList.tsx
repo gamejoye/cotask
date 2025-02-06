@@ -78,6 +78,7 @@ export default function TodoList({
         <div
           style={{
             textAlign: 'center',
+            padding: 10,
           }}
         >
           <Typography.Text type='secondary'>loading...</Typography.Text>
@@ -87,6 +88,7 @@ export default function TodoList({
         <div
           style={{
             textAlign: 'center',
+            padding: 10,
           }}
         >
           <Typography.Text type='secondary'>没有更多待办事项了</Typography.Text>

@@ -76,9 +76,15 @@ export function useTodo(params: UseTodoParams): UseTodoReturnType {
   const mutative: UseTodoReturnType['mutative'] = async (params, body) => {
     try {
       const res = await runUpdateTodoAsync(params, body);
-      if (res && res.data && (res.statusCode + '').startsWith('2')) {
+      if (res && (res.statusCode + '').startsWith('2')) {
         const todo = res.data;
-        setTodos(todos.map(t => (t.id === todo.id ? todo : t)));
+        const newTodos = todo
+          ? todos.map(t => (t.id === todo.id ? todo : t))
+          : todos.filter(t => t.id !== params.id);
+        if (!todo) {
+          dec();
+        }
+        setTodos(newTodos);
         return todo;
       }
       throw new Error('更新todo失败');
