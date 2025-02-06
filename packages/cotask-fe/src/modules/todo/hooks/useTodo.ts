@@ -40,8 +40,6 @@ export function useTodo(params: UseTodoParams): UseTodoReturnType {
   });
   const [error, setError] = useState<Error | undefined>(undefined);
 
-  console.log(params);
-
   const loadMore = async () => {
     if (!isAuthenticated || !user) return;
     try {

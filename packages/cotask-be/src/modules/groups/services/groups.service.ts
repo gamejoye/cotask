@@ -32,7 +32,6 @@ export class GroupsService extends IGroupsService {
     if (!existingGroup) {
       throw new NotFoundException('Group不存在');
     }
-    console.log(existingGroup, group);
     await this.groupsRepository.save({ ...existingGroup, ...group });
     return {
       ...existingGroup,
