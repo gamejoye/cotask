@@ -3,6 +3,7 @@ import { fn } from '@storybook/test';
 
 import TodoForm from '../TodoForm';
 import { FrequencyTypes, PriorityTypes } from '@cotask/types';
+import { Todo } from '@cotask-fe/shared/models';
 
 const meta: Meta<typeof TodoForm> = {
   title: 'Modules/Todos/TodoForm',
@@ -19,13 +20,14 @@ type Story = StoryObj<typeof TodoForm>;
 export const Default: Story = {
   args: {
     todo: {
+      ...new Todo(),
       id: 1,
       title: 'Todo 1',
       completed: false,
       priority: PriorityTypes.LOW,
       dueDate: '2023-02-01',
       frequency: FrequencyTypes.NONE,
-      createAt: '2023-01-01',
+      createdAt: '2023-01-01',
     },
     onEdit: fn(),
   },

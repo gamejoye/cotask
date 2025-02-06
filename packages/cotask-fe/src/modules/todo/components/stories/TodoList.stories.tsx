@@ -3,6 +3,7 @@ import { fn } from '@storybook/test';
 
 import TodoList from '../TodoList';
 import { FrequencyTypes } from '@cotask/types';
+import { Todo } from '@cotask-fe/shared/models';
 
 const meta: Meta<typeof TodoList> = {
   title: 'Modules/Todos/TodoList',
@@ -25,36 +26,40 @@ export const Default: Story = {
   args: {
     todos: [
       {
+        ...new Todo(),
         id: 1,
         title: 'Todo 1',
         completed: false,
         frequency: FrequencyTypes.NONE,
         dueDate: '2023-02-01',
-        createAt: '2023-01-01',
+        createdAt: '2023-01-01',
       },
       {
+        ...new Todo(),
         id: 2,
         title: 'Todo 2',
-        completed: true,
+        completed: false,
         frequency: FrequencyTypes.NONE,
         dueDate: '2023-02-01',
-        createAt: '2023-01-01',
+        createdAt: '2023-01-01',
       },
       {
+        ...new Todo(),
         id: 3,
         title: 'Todo 3',
         completed: false,
         frequency: FrequencyTypes.NONE,
         dueDate: '2023-02-01',
-        createAt: '2023-01-01',
+        createdAt: '2023-01-01',
       },
       {
+        ...new Todo(),
         id: 4,
         title: 'Todo 4',
-        completed: true,
+        completed: false,
         frequency: FrequencyTypes.NONE,
         dueDate: '2023-02-01',
-        createAt: '2023-01-01',
+        createdAt: '2023-01-01',
       },
     ],
     title: '全部任务',
@@ -63,7 +68,6 @@ export const Default: Story = {
     onEdit: fn(),
     loadMore: fn(),
     hasMore: false,
-    showCompleted: false,
   },
 };
 
@@ -76,6 +80,5 @@ export const EmptyList: Story = {
     onEdit: fn(),
     loadMore: fn(),
     hasMore: false,
-    showCompleted: false,
   },
 };
