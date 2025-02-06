@@ -25,10 +25,15 @@ export const ApiOkResponseResult = <T extends Type | 'string' | 'number' | 'bool
   model: T;
   description?: string;
   isArray?: boolean;
+  nullable?: boolean;
 }) => {
-  const { model, description, isArray } = options;
+  const { model, description, isArray, nullable } = options;
   const isPrimitive = ['string', 'number', 'boolean'].includes(model as string);
+
   const schema = isPrimitive ? { type: model as string } : { $ref: getSchemaPath(model as Type) };
+  const dataSchema = isArray ? { type: 'array', items: schema } : schema;
+  const nullableSchema = nullable ? { oneOf: [dataSchema, { type: 'null' }] } : dataSchema;
+
   const decorators = [
     ApiExtraModels(ApiBaseResult),
     ApiOkResponse({
@@ -38,7 +43,7 @@ export const ApiOkResponseResult = <T extends Type | 'string' | 'number' | 'bool
           { $ref: getSchemaPath(ApiBaseResult) },
           {
             properties: {
-              data: isArray ? { type: 'array', items: schema } : schema,
+              data: nullableSchema,
             },
             required: ['data'],
           },

@@ -95,13 +95,17 @@ export class TodosController {
   @ApiOperation({ summary: '更新todo' })
   @ApiOkResponseResult({
     model: TodoVo,
-    description: '成功更新todo',
+    description: '返回更新后的Todo，如果completed为true，则返回null',
+    nullable: true,
   })
   async updateTodo(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateTodoDto
-  ): Promise<TodoVo> {
+  ): Promise<TodoVo | null> {
     const todo = await this.todosService.update({ ...dto, id });
+    if (todo.completed) {
+      return null;
+    }
     return new TodoVo(todo);
   }
 
