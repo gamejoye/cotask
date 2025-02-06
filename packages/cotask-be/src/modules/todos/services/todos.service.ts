@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { ITodosService } from './todos.abstract';
+import { GetTodosResult, ITodosService } from './todos.abstract';
 import { Todo } from '../entities/todo.entity';
 import { GROUP_REPO, TODO_REPO } from '@cotask-be/common/constans/table-repos';
 import { Repository, Raw, In } from 'typeorm';
@@ -14,7 +14,7 @@ export class TodosService extends ITodosService {
   ) {
     super();
   }
-  async getTodosByToday(paging: BasePaging, userId: number): Promise<Todo[]> {
+  async getTodosByToday(paging: BasePaging, userId: number): Promise<GetTodosResult> {
     const { _start, _end, _order, _sort } = paging;
 
     // 获取用户所在的所有群组ID
@@ -26,7 +26,10 @@ export class TodosService extends ITodosService {
 
     const groupIds = userGroups.map(group => group.id);
     if (groupIds.length === 0) {
-      return [];
+      return {
+        todos: [],
+        total: 0,
+      };
     }
 
     const today = new Date();
@@ -34,12 +37,13 @@ export class TodosService extends ITodosService {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    return this.todosRepository.find({
+    const [todos, total] = await this.todosRepository.findAndCount({
       where: {
         dueDate: Raw(
           alias => `CAST(${alias} AS DATETIME) >= :start AND CAST(${alias} AS DATETIME) < :end`,
           { start: today, end: tomorrow }
         ),
+        completed: false,
         group: {
           id: In(groupIds),
         },
@@ -51,8 +55,12 @@ export class TodosService extends ITodosService {
         [_sort]: _order,
       },
     });
+    return {
+      todos,
+      total,
+    };
   }
-  async getTodosByUserId(paging: BasePaging, userId: number): Promise<Todo[]> {
+  async getTodosByUserId(paging: BasePaging, userId: number): Promise<GetTodosResult> {
     const { _start, _end, _order, _sort } = paging;
     // 获取用户所在的所有群组ID
     const userGroups = await this.groupsRepository
@@ -64,14 +72,18 @@ export class TodosService extends ITodosService {
     const groupIds = userGroups.map(group => group.id);
 
     if (groupIds.length === 0) {
-      return [];
+      return {
+        todos: [],
+        total: 0,
+      };
     }
 
-    return this.todosRepository.find({
+    const [todos, total] = await this.todosRepository.findAndCount({
       where: {
         group: {
           id: In(groupIds),
         },
+        completed: false,
       },
       relations: ['createdBy', 'group'],
       skip: _start,
@@ -80,6 +92,10 @@ export class TodosService extends ITodosService {
         [_sort]: _order,
       },
     });
+    return {
+      todos,
+      total,
+    };
   }
   async update(
     todo: Partial<Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'group'>> &
@@ -97,7 +113,7 @@ export class TodosService extends ITodosService {
       relations: ['createdBy', 'group'],
     });
   }
-  async getTodosByGroupId(paging: BasePaging, groupId: number): Promise<Todo[]> {
+  async getTodosByGroupId(paging: BasePaging, groupId: number): Promise<GetTodosResult> {
     const group = await this.groupsRepository.findOne({
       where: { id: groupId },
     });
@@ -105,8 +121,8 @@ export class TodosService extends ITodosService {
       throw new NotFoundException('Group not found');
     }
     const { _start, _end, _order, _sort } = paging;
-    return this.todosRepository.find({
-      where: { group: { id: groupId } },
+    const [todos, total] = await this.todosRepository.findAndCount({
+      where: { group: { id: groupId }, completed: false },
       relations: ['createdBy', 'group'],
       skip: _start,
       take: _end - _start,
@@ -114,6 +130,10 @@ export class TodosService extends ITodosService {
         [_sort]: _order,
       },
     });
+    return {
+      todos,
+      total,
+    };
   }
   async create(
     todo: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'group' | 'completed'>,

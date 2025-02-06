@@ -38,8 +38,8 @@ export class TodosController {
     /**
      * TODO 未来可能会考虑时区问题
      */
-    const todos = await this.todosService.getTodosByToday(query, query.user_id);
-    return { total: 0, data: todos.map(todo => new TodoVo(todo)) };
+    const { todos, total } = await this.todosService.getTodosByToday(query, query.user_id);
+    return { total, data: todos.map(todo => new TodoVo(todo)) };
   }
 
   @Get('all')
@@ -49,8 +49,8 @@ export class TodosController {
     description: '成功todo列表',
   })
   async getAllTodos(@Query() query: GetAllTodosDto): Promise<GetTodosVo> {
-    const todos = await this.todosService.getTodosByUserId(query, query.user_id);
-    return { total: 0, data: todos.map(todo => new TodoVo(todo)) };
+    const { todos, total } = await this.todosService.getTodosByUserId(query, query.user_id);
+    return { total, data: todos.map(todo => new TodoVo(todo)) };
   }
 
   @Get(':id')
@@ -73,9 +73,9 @@ export class TodosController {
   })
   @ApiResponse({ status: 404, description: 'group不存在' })
   async getTodosByGroupId(@Query() query: GetTodosDto): Promise<GetTodosVo> {
-    const todos = await this.todosService.getTodosByGroupId(query, query.group_id);
+    const { todos, total } = await this.todosService.getTodosByGroupId(query, query.group_id);
     return {
-      total: 0,
+      total,
       data: todos.map(todo => new TodoVo(todo)),
     };
   }
