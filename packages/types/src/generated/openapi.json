@@ -693,6 +693,96 @@
         "summary": "更新群组",
         "tags": ["groups"]
       }
+    },
+    "/ai/todo/complete/title": {
+      "post": {
+        "operationId": "AiController_completeTodoTitle",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteTodoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "ai生成的待办事项标题",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "生成待办事项标题",
+        "tags": ["Ai"]
+      }
+    },
+    "/ai/todo/complete/description": {
+      "post": {
+        "operationId": "AiController_completeTodoDescription",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteTodoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "ai生成的待办事项描述",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiBaseResult"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": ["data"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "生成待办事项描述",
+        "tags": ["Ai"]
+      }
     }
   },
   "info": {
@@ -1216,6 +1306,22 @@
           }
         },
         "required": ["name", "description"]
+      },
+      "CompleteTodoDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "学习英语",
+            "description": "待办事项标题"
+          },
+          "description": {
+            "type": "string",
+            "example": "每天早上6点起床，学习英语30分钟，然后去上班",
+            "description": "待办事项描述"
+          }
+        },
+        "required": ["title", "description"]
       }
     }
   }

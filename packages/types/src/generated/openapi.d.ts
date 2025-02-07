@@ -139,6 +139,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/ai/todo/complete/title': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** 生成待办事项标题 */
+    post: operations['AiController_completeTodoTitle'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/ai/todo/complete/description': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** 生成待办事项描述 */
+    post: operations['AiController_completeTodoDescription'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -494,6 +528,18 @@ export interface components {
       /**
        * @description 分组描述
        * @example 寒假ACM集训
+       */
+      description: string;
+    };
+    CompleteTodoDto: {
+      /**
+       * @description 待办事项标题
+       * @example 学习英语
+       */
+      title: string;
+      /**
+       * @description 待办事项描述
+       * @example 每天早上6点起床，学习英语30分钟，然后去上班
        */
       description: string;
     };
@@ -855,6 +901,58 @@ export interface operations {
         content: {
           'application/json': components['schemas']['ApiBaseResult'] & {
             data: components['schemas']['GroupVo'];
+          };
+        };
+      };
+    };
+  };
+  AiController_completeTodoTitle: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CompleteTodoDto'];
+      };
+    };
+    responses: {
+      /** @description ai生成的待办事项标题 */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: string[];
+          };
+        };
+      };
+    };
+  };
+  AiController_completeTodoDescription: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CompleteTodoDto'];
+      };
+    };
+    responses: {
+      /** @description ai生成的待办事项描述 */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiBaseResult'] & {
+            data: string[];
           };
         };
       };
