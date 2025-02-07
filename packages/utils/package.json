@@ -1,0 +1,25 @@
+{
+  "name": "@cotask/utils",
+  "version": "0.0.0",
+  "description": "cotask utils",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p ./tsconfig.build.json && node ./build-utils.js"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "keywords": [],
+  "author": "gamejoye",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^6.0.6"
+  }
+}
