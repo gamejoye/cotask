@@ -2,3 +2,7 @@ node_modules/
 dist/
 .vscode/
 *storybook.log
+
+# Environment files
+**/.env
+**/.env.*
