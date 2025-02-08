@@ -19,9 +19,12 @@ import { Todo } from '@cotask-fe/shared/models';
 import { useAiTodoTitle } from '../hooks';
 import { AlertOutlined } from '@ant-design/icons';
 import { debounce } from '@cotask/utils';
+import { useAiTodoDescription } from '../hooks/useAiTodoDescription';
+
+const { TextArea } = Input;
 
 export type Props = {
-  todo: Todo;
+  initialTodo?: Todo;
   onEdit: (todo: Todo) => void;
 };
 
@@ -36,7 +39,7 @@ const formItemLayout = {
   },
 };
 
-type FormValues = Pick<Todo, 'title' | 'priority' | 'dueDate' | 'frequency'>;
+type FormValues = Pick<Todo, 'title' | 'description' | 'priority' | 'dueDate' | 'frequency'>;
 
 type AutoCompleteLabelProps = {
   value: string;
@@ -71,16 +74,17 @@ function AutoCompleteLabel({ value }: AutoCompleteLabelProps) {
   );
 }
 
-export default function TodoForm({ todo, onEdit }: Props) {
+export default function TodoForm({ initialTodo = new Todo(), onEdit }: Props) {
   const [form] = useForm<Todo>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [frequencyOption, setFrequencyOption] = useState<FrequencyOptions | undefined>(undefined);
   const [frequency, setFrequency, lastFrequency] = useLastState<FrequencyTypes>(
     FrequencyTypes.NONE
   ); // 用于控制CotaskDatePicker的initialFrequency
-  const [suggestTodo, setSuggestTodo] = useState<Todo>(todo);
-  const { data: suggestions, loading } = useAiTodoTitle(suggestTodo);
-
+  const [internalTodo, setInternalTodo] = useState<Todo>(initialTodo);
+  const { data: suggestions, loading } = useAiTodoTitle(internalTodo);
+  const { data: descriptionSuggestions, loading: descriptionLoading } =
+    useAiTodoDescription(internalTodo);
   const titleOptions = useMemo<AutoCompleteProps['options']>(() => {
     return suggestions.map(s => ({
       value: s,
@@ -88,10 +92,21 @@ export default function TodoForm({ todo, onEdit }: Props) {
       disabled: loading,
     }));
   }, [suggestions, loading]);
+  const descriptionOptions = useMemo<AutoCompleteProps['options']>(() => {
+    return descriptionSuggestions.map(s => ({
+      value: s,
+      label: <AutoCompleteLabel value={s} />,
+      disabled: descriptionLoading,
+    }));
+  }, [descriptionSuggestions, descriptionLoading]);
 
   const onTitleChange = debounce((value: string) => {
-    setSuggestTodo({ ...todo, title: value });
+    setInternalTodo({ ...internalTodo, title: value });
   }, 1000);
+
+  const onDescriptionChange = debounce((value: string) => {
+    setInternalTodo({ ...internalTodo, description: value });
+  }, 2000);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -114,7 +129,7 @@ export default function TodoForm({ todo, onEdit }: Props) {
 
   const onFinish = (values: FormValues) => {
     onEdit({
-      ...todo,
+      ...internalTodo,
       ...values,
       frequencyOption: frequencyOption ?? null,
     });
@@ -126,10 +141,11 @@ export default function TodoForm({ todo, onEdit }: Props) {
         {...formItemLayout}
         form={form}
         initialValues={{
-          title: todo.title,
-          priority: todo.priority,
-          dueDate: todo.dueDate,
-          frequency: todo.frequency,
+          title: initialTodo.title,
+          description: initialTodo.description,
+          priority: initialTodo.priority,
+          dueDate: initialTodo.dueDate,
+          frequency: initialTodo.frequency,
         }}
         onFinish={onFinish}
         style={{ maxWidth: 600 }}
@@ -145,6 +161,16 @@ export default function TodoForm({ todo, onEdit }: Props) {
             placeholder='输入待办事项标题'
           >
             <Input />
+          </AutoComplete>
+        </Form.Item>
+
+        <Form.Item<FormValues> label='描述' name='description'>
+          <AutoComplete
+            options={descriptionOptions}
+            onChange={onDescriptionChange}
+            placeholder='输入待办事项描述'
+          >
+            <TextArea rows={1} autoSize={{ maxRows: 10 }} />
           </AutoComplete>
         </Form.Item>
 

@@ -19,15 +19,13 @@ type Story = StoryObj<typeof TodoForm>;
 
 export const Default: Story = {
   args: {
-    todo: {
+    initialTodo: {
       ...new Todo(),
-      id: 1,
-      title: 'Todo 1',
-      completed: false,
+      title: 'Uncontrolled Todo',
+      description: 'This is an uncontrolled todo',
       priority: PriorityTypes.LOW,
-      dueDate: '2023-02-01',
-      frequency: FrequencyTypes.NONE,
-      createdAt: '2023-01-01',
+      dueDate: '2023-03-01',
+      frequency: FrequencyTypes.DAILY,
     },
     onEdit: fn(),
   },

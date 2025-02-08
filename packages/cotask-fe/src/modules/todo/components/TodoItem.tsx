@@ -41,7 +41,7 @@ export default function TodoItem({
 
   useEffect(() => {
     if (editRef.current) editRef.current.focus();
-  }, [editRef.current]);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -57,6 +57,10 @@ export default function TodoItem({
 
   const onTitleChange = (value: string) => {
     setNewTodo({ ...newTodo, title: value });
+  };
+
+  const onDescriptionChange = (value: string) => {
+    setNewTodo({ ...newTodo, description: value });
   };
 
   const handleCancel = () => {
@@ -81,7 +85,7 @@ export default function TodoItem({
             borderRadius: '4px',
             padding: '12px 16px',
             width: '100%',
-            marginTop: '20px',
+            marginTop: '10px',
           }}
         >
           <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
@@ -95,6 +99,15 @@ export default function TodoItem({
                   style={{ paddingLeft: 0 }}
                   ref={editRef}
                   suffix={<MenuOutlined onClick={showModal} />}
+                />
+                <Input.TextArea
+                  placeholder='待办事项描述'
+                  value={newTodo.description}
+                  onChange={e => onDescriptionChange(e.target.value)}
+                  variant='borderless'
+                  style={{ paddingLeft: 0, color: '#999' }}
+                  rows={1}
+                  autoSize={{ maxRows: 10 }}
                 />
                 <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {newTodo.dueDate}</div>
               </div>
@@ -128,9 +141,9 @@ export default function TodoItem({
             </Space>
           </Space>
         </div>
-        <Modal open={isModalOpen} onCancel={closeModal} footer={null}>
+        <Modal open={isModalOpen} onCancel={closeModal} destroyOnClose footer={null}>
           <TodoForm
-            todo={newTodo}
+            initialTodo={newTodo}
             onEdit={t => {
               setNewTodo(t);
               closeModal();
@@ -152,6 +165,7 @@ export default function TodoItem({
         <TodoRadio isNew={false} onClick={() => onComplete(todo)} />
         <div style={{ flex: 1 }} onDoubleClick={onDoubleClick}>
           <Typography.Text delete={todo.completed}>{todo.title}</Typography.Text>
+          <Typography.Paragraph type='secondary'>{todo.description}</Typography.Paragraph>
           <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {todo.dueDate}</div>
         </div>
       </div>
