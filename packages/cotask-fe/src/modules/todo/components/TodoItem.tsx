@@ -165,7 +165,11 @@ export default function TodoItem({
         <TodoRadio isNew={false} onClick={() => onComplete(todo)} />
         <div style={{ flex: 1 }} onDoubleClick={onDoubleClick}>
           <Typography.Text delete={todo.completed}>{todo.title}</Typography.Text>
-          <Typography.Paragraph type='secondary'>{todo.description}</Typography.Paragraph>
+          <Typography.Paragraph type='secondary'>
+            {todo.description.split(/(?<!\\)\n/g).map((text, index) => {
+              return <div key={index}>{text}</div>;
+            })}
+          </Typography.Paragraph>
           <div style={{ fontSize: '12px', color: '#999' }}>每日提醒 - {todo.dueDate}</div>
         </div>
       </div>
