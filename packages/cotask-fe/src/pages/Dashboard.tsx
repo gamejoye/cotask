@@ -8,7 +8,7 @@ import { useTodo } from '@cotask-fe/modules/todo/hooks';
 import CotaskCard from '@cotask-fe/shared/components/CotaskCard';
 import CotaskLogo from '@cotask-fe/shared/components/CotaskLogo';
 import { Group, Todo } from '@cotask-fe/shared/models';
-import { Button, Layout, Modal, theme, Typography } from 'antd';
+import { Button, Layout, message, Modal, theme, Typography } from 'antd';
 import { useState } from 'react';
 const { Sider, Header, Content, Footer } = Layout;
 
@@ -182,6 +182,7 @@ export default function Dashboard() {
                   if (selectedGroup) {
                     create({ ...todo, createdBy: user!.id, groupId: selectedGroup.id });
                   } else {
+                    message.warning('目前还未支持在“全部”/“今日”创建任务（正在开发中）');
                     // TODO 支持typed todos的创建
                   }
                 } else {
